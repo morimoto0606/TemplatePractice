@@ -7,7 +7,11 @@
 #include <boost/random.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/foreach.hpp>
 #include "Dual.h"
+#include "Functions.h"
+#include "type_traits.h"
+#include "function_traits.h"
 
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
@@ -25,17 +29,46 @@ namespace cva {
 			boost::normal_distribution<double> dist(0.0, 1.0);
 			boost::variate_generator < boost::mt19937,
 				boost::normal_distribution<double >> rand(gen, dist);
-			ublas::matrix<value_type> bm(pathNum, gridNum);
-			_pathMatrix.resize(pathNum, gridNum);
-			
-			//log x(j+1) = log x(j)  + (mu - sigma^2/2) dt + sigma dw
-		}
-	private :
-		T _x0;
-		T _mu;
-		T _sigma;
 
-		ublas::matrix<T> _pathMatrix;
+			ublas::matrix<double> dBm(pathNum, gridNum - 1);
+			for (std::size_t i = 0; i < pathNum; ++i) {
+				for (std::size_t j = 0; j < gridNum - 1; ++j) {
+					dBm(i, j) = std::sqrt(dt) * rand();
+				}
+			}
+			_pathMatrix.resize(pathNum, gridNum);
+			for (std::size_t i = 0; i < pathNum; ++i) {
+				_pathMatrix(i, 0) = cva::log(x0);
+			}
+			for (std::size_t i = 0; i < pathNum; ++i) {
+				for (std::size_t j = 1; j < gridNum - 1; ++j) {
+					_pathMatrix(i, j) = _pathMatrix(i, j - 1) 
+						+ (mu - sigma * sigma / 2.0) * dt + sigma * dBm(i, j);
+				}
+			}
+			for (std::size_t i = 1; i < pathNum; ++i) {
+				for (std::size_t j = 1; j < gridNum - 1; ++j) {
+					_pathMatrix(i, j) = cva::exp(_pathMatrix(i, 0));
+				}
+			}
+		}
+
+
+
+		const ublas::matrix_row<value_type> getTimewisePath(const size_type i) const
+		{
+			return ublas::row(_pathMatrix, i);
+		}
+		const ublas::matrix_column<value_type> getPathwisePath(const size_type j) const
+		{
+			return ublas::column(_pathMatrix, j);
+		}
+
+	private:
+		value_type _x0;
+		value_type _mu;
+		value_type _sigma;
+		ublas::matrix<value_type> _pathMatrix;
 	};
 } //namespace cva
 #endif

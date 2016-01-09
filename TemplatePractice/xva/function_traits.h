@@ -15,7 +15,7 @@ namespace cva {
 	};
 
 	template <>
-	struct max_traits <Dual>{
+	struct max_traits<Dual> {
 		typedef Dual value_type;
 		typedef Dual result_type;
 		static const result_type 
@@ -38,7 +38,7 @@ namespace cva {
 		}
 	};
 	template <>
-	struct exp_traits <Dual> {
+	struct exp_traits<Dual> {
 	public:
 		typedef Dual value_type;
 		typedef Dual result_type;
@@ -47,6 +47,26 @@ namespace cva {
 			const double value = std::exp(x.value());
 			const double deriv = x.deriv() * value;
 			return Dual(deriv, value);
+		}
+	};
+
+	template <typename T>
+	struct log_traits {
+		typedef T value_type;
+		typedef T result_type;
+		static const result_type apply(const value_type& x)
+		{
+			return std::log(x);
+		}
+	};
+
+	template <>
+	struct log_traits<Dual> {
+		typedef Dual value_type;
+		typedef Dual result_type;
+		static const result_type apply(const value_type& x)
+		{
+			return Dual(std::log(x.value()), x.deriv() / x.value());
 		}
 	};
 } //namespace cva

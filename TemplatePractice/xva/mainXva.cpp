@@ -2,10 +2,12 @@
 #include "PayOff.h"
 #include "Dual.h"
 #include "Functions.h"
-#include <boost/numeric/ublas/io.hpp>   
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/numeric/ublas/io.hpp>   
+
 #include <boost/make_shared.hpp>
+#include "Test.h"
 namespace ublas = boost::numeric::ublas;
 
 template <typename T>
@@ -14,7 +16,7 @@ double payoffFunc(const cva::PayOff<T, double>& payoff,
 	return payoff(x);
 }
 cva::Dual quadFunc(const cva::Dual& x) {
-	return x * x - cva::Dual(2.0);
+	return x * x - 2.0;
 }
 cva::Dual quadFunc(const ublas::vector<cva::Dual>& x) {
 	return ublas::inner_prod(x, x);
@@ -60,6 +62,7 @@ cva::Dual h(const ublas::vector<cva::Dual>& x)
 
 int main()
 {
+	cva::pathTest();
 	{std::cout << "Test PayOff" << std::endl;
 		ublas::vector<double> x(3);
 		x(0) = 1.0;

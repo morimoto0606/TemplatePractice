@@ -16,5 +16,12 @@ namespace cva{
 	{
 		return exp_traits<T>::apply(x);
 	}
+
+	template <typename T>
+	typename log_traits<T>::value_type
+		log(const T& x)
+	{
+		return log_traits<T>::apply(x);
+	}
 } //namespace cva
 #endif

@@ -4,20 +4,38 @@
 namespace cva {
 	class Dual {
 	public:
+		//constructors
 		Dual() : _value(0.0), _deriv(0.0) {}
 		explicit Dual(const double value)
 		: _value(value), _deriv(0.0) {}
 		
 		Dual(const double value, const double deriv) 
 		: _value(value), _deriv(deriv) {}
-		
+
+		//template <typename T>
+		//Dual(const T& rhs) {
+		//	_value = type_traits<Dual, T>::apply(rhs)._value;
+		//	_deriv = type_traits<Dual, T>::apply(rhs)._deriv;
+		//}
+
+		template <typename T> 
+		Dual& operator =(const T& rhs) {
+			if (this != &(type_traits<Dual, T>::apply(rhs))) {
+				_value = type_traits<Dual, T>::apply(rhs)._value;
+				_deriv = type_traits<Dual, T>::apply(rhs)._deriv;
+			}
+			return *this;
+		}
+
+		//accessors
 		double value() const {
 			return _value;
 		}
 		double deriv() const {
 			return _deriv;
 		}
-		
+
+		//operators
 		template <typename T>
 		Dual& operator+=(const T& rhs)
 		{
@@ -60,26 +78,6 @@ namespace cva {
 	private:
 		double _value;
 		double _deriv;
-	};
-
-	//template <typename T>
-	//T max(const T& d, const double floor)
-	//{
-	//	double value = std::max(d.value(), floor);
-	//	double deriv = d.value() > floor ? d.deriv() : 0.0;
-	//	return T(value, deriv);
-	//}
-	//template <>
-	//double max(const double& d, const double floor)
-	//{
-	//	return std::max(d, floor);
-	//}
-	//Dual exp(const Dual& d)
-	//{
-	//	return Dual(std::exp(d.value()), d.deriv() * std::exp(d.value()));
-	//}
-	//
-	
-
+	};	
 } //namespace cva
 #endif
