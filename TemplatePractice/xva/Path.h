@@ -30,30 +30,36 @@ namespace cva {
 			boost::variate_generator < boost::mt19937,
 				boost::normal_distribution<double >> rand(gen, dist);
 
-			ublas::matrix<double> dBm(pathNum, gridNum - 1);
+			//Generate dB(t)
+			ublas::matrix<double> dBm(pathNum, gridNum);
 			for (std::size_t i = 0; i < pathNum; ++i) {
-				for (std::size_t j = 0; j < gridNum - 1; ++j) {
+				for (std::size_t j = 0; j < gridNum; ++j) {
 					dBm(i, j) = std::sqrt(dt) * rand();
 				}
 			}
-			_pathMatrix.resize(pathNum, gridNum);
+			//Generate path by EM 
+			_pathMatrix.resize(pathNum, gridNum + 1);
 			for (std::size_t i = 0; i < pathNum; ++i) {
 				_pathMatrix(i, 0) = cva::log(x0);
 			}
 			for (std::size_t i = 0; i < pathNum; ++i) {
-				for (std::size_t j = 1; j < gridNum - 1; ++j) {
+				for (std::size_t j = 1; j < gridNum + 1; ++j) {
 					_pathMatrix(i, j) = _pathMatrix(i, j - 1) 
-						+ (mu - sigma * sigma / 2.0) * dt + sigma * dBm(i, j);
+						+ (mu - sigma * sigma / 2.0) * dt + sigma * dBm(i, j - 1);
 				}
 			}
-			for (std::size_t i = 1; i < pathNum; ++i) {
-				for (std::size_t j = 1; j < gridNum - 1; ++j) {
-					_pathMatrix(i, j) = cva::exp(_pathMatrix(i, 0));
+			//transform from log(X(t)) to X(t)
+			for (std::size_t i = 0; i < pathNum; ++i) {
+				for (std::size_t j = 0; j < gridNum + 1; ++j) {
+					_pathMatrix(i, j) = cva::exp(_pathMatrix(i, j));
 				}
 			}
 		}
 
-
+		value_type getPathValue(const size_type pathIndex, const size_type gridIndex) const
+		{
+			return _pathMatrix(pathIndex, gridIndex);
+		}
 
 		const ublas::matrix_row<value_type> getTimewisePath(const size_type i) const
 		{

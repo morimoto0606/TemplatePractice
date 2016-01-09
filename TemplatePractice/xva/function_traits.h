@@ -1,7 +1,9 @@
 #ifndef FUNCTION_TRAITS_H_INCLUDED
 #define FUNCTION_TRAITS_H_INCLUDED
-
+#include <boost/math/distributions.hpp>
+#include <boost/math/distributions/normal.hpp>
 #include "Dual.h"
+
 namespace cva {
 	template <typename T>
 	struct max_traits {
@@ -18,10 +20,10 @@ namespace cva {
 	struct max_traits<Dual> {
 		typedef Dual value_type;
 		typedef Dual result_type;
-		static const result_type 
+		static const result_type
 			apply(const value_type& x, const double y)
 		{
-			const double value = std::max(x.value(), y); 
+			const double value = std::max(x.value(), y);
 			const double deriv = x.value() >= y ? x.deriv() : 0.0;
 			return Dual(value, deriv);
 		}
@@ -46,7 +48,7 @@ namespace cva {
 		{
 			const double value = std::exp(x.value());
 			const double deriv = x.deriv() * value;
-			return Dual(deriv, value);
+			return Dual(value, deriv);
 		}
 	};
 
@@ -69,5 +71,29 @@ namespace cva {
 			return Dual(std::log(x.value()), x.deriv() / x.value());
 		}
 	};
+
+	template <typename T>
+	struct normal_cdf_traits {
+		typedef T value_type;
+		typedef T result_type;
+		static const result_type apply(const value_type& x)
+		{
+			boost::math::normal_distribution<> normal;
+			return boost::math::cdf(normal, x);
+		}
+	};
+
+	template <>
+	struct normal_cdf_traits<Dual> {
+		typedef Dual value_type;
+		typedef Dual result_type;
+		static const result_type apply(const value_type& x)
+		{
+			boost::math::normal_distribution<> normal;
+			return Dual(boost::math::cdf(normal, x.value()),
+				x.deriv() * boost::math::pdf(normal, x.value()));
+		}
+	};
+
 } //namespace cva
 #endif

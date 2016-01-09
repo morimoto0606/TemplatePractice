@@ -10,7 +10,7 @@ namespace cva {
 	class PayOff {
 	public:
 		virtual ~PayOff() {}
-		T operator  ()(const ublas::vector<T>& x) const
+		T operator()(const ublas::vector<T>& x) const
 		{
 			return static_cast<const Derived&>(*this).operator()(x);
 		}
@@ -22,7 +22,7 @@ namespace cva {
 		typedef T value_type;
 		typedef value_type result_type;
 		Forward(const value_type& a, const value_type& b) : _a(a), _b(b) {}
-		result_type operator  ()(const ublas::vector<value_type>& x) const
+		result_type operator()(const ublas::vector<value_type>& x) const
 		{
 			return _a * *(x.end() - 1) + _b;
 		}
@@ -35,7 +35,7 @@ namespace cva {
 	class European : public PayOff <European<T>, T> {
 	public:
 		European(const T& a, const T& b) : _a(a), _b(b) {}
-		T operator  ()(const ublas::vector<T>& x) const 
+		T operator()(const ublas::vector<T>& x) const 
 		{
 			return cva::max(_a * *(x.end() - 1) + _b, 0.0);
 		}
