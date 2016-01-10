@@ -3,5 +3,10 @@
 
 namespace cva {
 	void pathTest();
+	void europeanTest();
+	void payoffTest();
+	void payoffCrtpTest();
+	void payoffDerivTest();
+	void lsmFunctionTest();
 }
 #endif

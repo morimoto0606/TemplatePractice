@@ -61,11 +61,11 @@ namespace cva {
 			return _pathMatrix(pathIndex, gridIndex);
 		}
 
-		const ublas::matrix_row<value_type> getTimewisePath(const size_type i) const
+		const ublas::vector<value_type> getTimewisePath(const size_type i) const
 		{
 			return ublas::row(_pathMatrix, i);
 		}
-		const ublas::matrix_column<value_type> getPathwisePath(const size_type j) const
+		const ublas::vector<value_type> getPathwisePath(const size_type j) const
 		{
 			return ublas::column(_pathMatrix, j);
 		}

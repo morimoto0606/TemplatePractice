@@ -6,42 +6,49 @@
 
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
-	template <typename Derived, typename T>
+	template <typename Derived>
 	class PayOff {
 	public:
 		virtual ~PayOff() {}
-		T operator()(const ublas::vector<T>& x) const
+
+		template <typename T>
+		typename T::value_type operator()(const T& x) const
 		{
 			return static_cast<const Derived&>(*this).operator()(x);
 		}
 	};
 
-	template <typename T>
-	class Forward : public PayOff <Forward<T>, T> {
+	class Forward : public PayOff <Forward> {
 	public:
-		typedef T value_type;
-		typedef value_type result_type;
-		Forward(const value_type& a, const value_type& b) : _a(a), _b(b) {}
-		result_type operator()(const ublas::vector<value_type>& x) const
+		Forward(const double& a, const double& b) : _a(a), _b(b) {}
+		
+		template <typename T>
+		typename T::value_type operator()(const T& x) const
 		{
-			return _a * *(x.end() - 1) + _b;
+			return *(x.end() - 1) * _a   + _b;
 		}
 	private:
-		value_type _a;
-		value_type _b;
+		double _a;
+		double _b;
 	};
 
-	template <typename T>
-	class European : public PayOff <European<T>, T> {
+	class European : public PayOff <European> {
 	public:
-		European(const T& a, const T& b) : _a(a), _b(b) {}
-		T operator()(const ublas::vector<T>& x) const 
+		European(const double& a, const double& b) : _a(a), _b(b) {}
+		
+		template <typename T>
+		typename T::value_type operator()(const T& x) const
 		{
-			return cva::max(_a * *(x.end() - 1) + _b, 0.0);
+			return cva::max(*(x.end() - 1) + _b, 0.0) * _a;
+		}
+		template <typename T>
+		T operator()(const ublas::matrix_column<T>& x) const
+		{
+			return cva::max(*(x.end() - 1) + _b, 0.0) * _a;
 		}
 	private:
-		T _a;
-		T _b;
+		double _a;
+		double _b;
 	};
 } // namespace cva
 

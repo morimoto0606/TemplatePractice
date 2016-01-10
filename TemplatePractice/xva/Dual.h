@@ -4,6 +4,7 @@
 namespace cva {
 	class Dual {
 	public:
+
 		//constructors
 		Dual() : _value(0.0), _deriv(0.0) {}
 		explicit Dual(const double value)
