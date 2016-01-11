@@ -22,27 +22,28 @@ namespace cva {
 
 		const double strike = 100.0;
 
-		Dual european;
-		for (std::size_t i = 0; i < pathNum; ++i) {
-			european += cva::max(path.getPathValue(i, gridNum) - strike, 0.0);
-		}
-		european = european / pathNum;
-		std::cout << "european" << ',' << european.value() << ',' << european.deriv() << std::endl;
-
 		const double a = 1.0;
 		const double b = -strike;
-		Dual european2;
+		Dual european;
 		European eurPayoff(a, b);
 		for (std::size_t i = 0; i < pathNum; ++i) {
-			european2 += eurPayoff(path.getTimewisePath(i));
+			european += eurPayoff(path.getTimewisePath(i));
 		}
-		european2 /= pathNum;
-		std::cout << "european2" << ',' << european2.value() << ',' << european2.deriv() << std::endl;
+		european /= pathNum;
+		std::cout << "europeanOptionByAD(Monte) (value, deriv) =" 
+			<< european.value() << ',' <<
+			european.deriv() << std::endl;
+		
 		Dual europeanAnalytic
-			= cva::europeanFunction(x0, mu, sigma, a, b, dt * gridNum);
-		std::cout << "analyticEuropean" << ',' << europeanAnalytic.value() << ',' << europeanAnalytic.deriv() << std::endl;
+			= cva::europeanFunction(
+				x0, mu, sigma, a, b, dt * gridNum);
+		std::cout << "europeanOptionByAD(Analytic) (value, deriv) ="
+			<< europeanAnalytic.value() << ',' 
+			<< europeanAnalytic.deriv() << std::endl;
 
 		Dual europeanDelta = cva::europeanDelta(x0, mu, sigma, a, b, dt * gridNum);
-		std::cout << "analyticDelta" << ',' << europeanDelta.value() << ',' << europeanDelta.deriv() << std::endl;
+		std::cout << "europeanOptionDelta(Analytic) (Delta, Gamma) ="
+			<< europeanDelta.value() << ',' << 
+			europeanDelta.deriv() << std::endl;
 	}
 }

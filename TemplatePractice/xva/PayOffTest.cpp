@@ -21,11 +21,10 @@ namespace cva {
 
 	void payoffTest()
 	{
-		std::cout << "Test PayOff" << std::endl;
 		ublas::vector<double> x(3);
 		x(0) = 0.0;
 		x(1) = 1.0;
-		x(2) = 3.0;
+		x(2) = 2.0;
 		ublas::vector<double> y(3);
 		y(0) = 3.0;
 		y(1) = 4.0;
@@ -44,12 +43,7 @@ namespace cva {
 
 		std::cout << fwd(x) << ',' << fwd(y) << std::endl;
 		std::cout << eur(x) << ',' << eur(y) << std::endl;
-//		std::cout << payoffFunc(fwd, x) << std::endl;
-
 		std::cout << fwd(ublas::row(m, 1));
-
-		//std::cout << eur(ublas::column(m, 2)) << std::endl;
-		//std::cout << payoffFunc(eur, ublas::column(m, 2)) << std::endl;
 	}
 
 	void payoffCrtpTest()
@@ -64,23 +58,20 @@ namespace cva {
 		y(1) = 4.0;
 		y(2) = 5.0;
 
-		ublas::matrix<double> m(3, 3, 0.0);
-		for (std::size_t i = 0; i < 2; ++i) {
-			for (std::size_t j = 0; j < 3; ++j) {
-				m(i, j) = 3 * i + j;
-			}
-		}
-		std::cout << m << std::endl;
-
 		cva::Forward fwd(2.0, -1.0);
 		cva::European eur(2.0, -1.0);
 
-		std::cout << payoffFunc(fwd, x) << ',' << payoffFunc(eur, x) << std::endl;
+		std::cout << "x = " << x << std::endl;
+		std::cout << "y = " << y << std::endl;
+		
+		std::cout << "using Payoff Function " 
+			<< payoffFunc(fwd, x) << ',' << 
+			payoffFunc(eur, x) << std::endl;
+		
+		std::cout << "using Payoff Function " 
+			<< payoffFunc(fwd, x) << ',' << 
+			payoffFunc(eur, x) << std::endl;
 
-		std::cout << fwd(ublas::row(m, 1));
-
-		//std::cout << eur(ublas::column(m, 2)) << std::endl;
-		//std::cout << payoffFunc(eur, ublas::column(m, 2)) << std::endl;
 	}
 
  	void payoffDerivTest()
@@ -90,6 +81,10 @@ namespace cva {
 		x(0) = cva::Dual(1.0);
 		x(1) = cva::Dual(0.1);
 		x(2) = cva::Dual(3.0);
+		std::cout << "x = (" << x(0).value() << ',' 
+			<< x(1).value() << ',' << x(2).value() << ')'  
+			<< std::endl;
+
 		ublas::vector<cva::Dual> d0(3);
 		d0(0) = cva::Dual(0.0, 1.0);
 		d0(1) = cva::Dual(0.0);
@@ -116,12 +111,12 @@ namespace cva {
 		cva::Dual resultEur1 = eur(x + d1);
 		cva::Dual resultEur2 = eur(x + d2);
 
-		std::cout << resultFwd0.value() << ',' << resultFwd0.deriv() << std::endl;
-		std::cout << resultFwd1.value() << ',' << resultFwd1.deriv() << std::endl;
-		std::cout << resultFwd2.value() << ',' << resultFwd2.deriv() << std::endl;
+		//std::cout << "(fwd(x), d/dx0 fwd(x)) = " <<  resultFwd0.value() << ',' << resultFwd0.deriv() << std::endl;
+		//std::cout << "(fwd(x), d/dx1 fwd(x)) = " << resultFwd1.value() << ',' << resultFwd1.deriv() << std::endl;
+		//std::cout << "(fwd(x), d/dx2 fwd(x)) = " << resultFwd2.value() << ',' << resultFwd2.deriv() << std::endl;
 
-		std::cout << resultEur0.value() << ',' << resultEur0.deriv() << std::endl;
-		std::cout << resultEur1.value() << ',' << resultEur1.deriv() << std::endl;
-		std::cout << resultEur2.value() << ',' << resultEur2.deriv() << std::endl;
+		//std::cout << "(eur(x), d/dx0 eur(x)) = " << resultEur0.value() << ',' << resultEur0.deriv() << std::endl;
+		//std::cout << "(eur(x), d/dx1 eur(x)) = " << resultEur1.value() << ',' << resultEur1.deriv() << std::endl;
+		//std::cout << "(eur(x), d/dx2 eur(x)) = " << resultEur2.value() << ',' << resultEur2.deriv() << std::endl;
 	}
 }//namespace cva {

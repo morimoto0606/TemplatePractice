@@ -95,5 +95,15 @@ namespace cva {
 		}
 	};
 
+	//template <typename T>
+	//struct monomial_traits {
+	//	typedef T value_type;
+	//	typedef value_type result_type;
+	//	static const result_type apply(const value_type& x)
+	//	{
+	//		return 
+	//	}
+	//};
+
 } //namespace cva
 #endif

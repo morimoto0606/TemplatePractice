@@ -9,7 +9,9 @@ namespace cva {
 		const double b,
 		const double maturity) 
 	{
-		return a * x * cva::exp((mu - sigma * sigma / 2.0) * maturity ) + b;
+		return a * x 
+			* cva::exp((mu - sigma * sigma / 2.0)
+			* maturity ) + b;
 	}
 
 	//E[max(aX(t) + b, 0)]
@@ -22,8 +24,10 @@ namespace cva {
 		T dplus = (cva::log(x / (-(b / a)))
 			+ (mu + sigma * sigma / 2.0) * maturity) 
 			/ (sigma * std::sqrt(maturity));
-		T dminus = dplus - sigma * std::sqrt(maturity);
-		return (x * cva::exp(mu * maturity) * cva::normalCdf(dplus)
+		T dminus = dplus 
+			- sigma * std::sqrt(maturity);
+		return (x * cva::exp(mu * maturity) 
+			* cva::normalCdf(dplus)
 			+ cva::normalCdf(dminus) * (b / a)) * a;
 	}
 
@@ -37,8 +41,11 @@ namespace cva {
 		T dplus = (cva::log(x / (-(b / a)))
 			+ (mu + sigma * sigma / 2.0) * maturity)
 			/ (sigma * std::sqrt(maturity));
-		T dminus = dplus - sigma * std::sqrt(maturity);
-		return cva::exp(mu * maturity) * cva::normalCdf(dplus) * a;
+		T dminus = dplus - sigma 
+			* std::sqrt(maturity);
+		
+		return cva::exp(mu * maturity)
+			* cva::normalCdf(dplus) * a;
 	}
 
 } // namespace cva

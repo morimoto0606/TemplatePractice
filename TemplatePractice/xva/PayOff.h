@@ -42,7 +42,7 @@ namespace cva {
 			return cva::max(*(x.end() - 1) + _b, 0.0) * _a;
 		}
 		template <typename T>
-		T operator()(const ublas::matrix_column<T>& x) const
+		T operator()(const ublas::vector<T>& x) const
 		{
 			return cva::max(*(x.end() - 1) + _b, 0.0) * _a;
 		}

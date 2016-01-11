@@ -14,7 +14,11 @@ int main()
 	cva::pathTest();
 	cva::europeanTest();
 	cva::payoffTest();
-
+	cva::dualTest();
+	cva::dualVectorTest();
+	cva::dualCompositionTest();
+	cva::lsmFunctionTest();
+	cva::regressionTest();
 	int i = 0;
 	std::cin >> i;
 	return i;

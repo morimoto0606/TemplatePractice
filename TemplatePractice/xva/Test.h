@@ -7,6 +7,11 @@ namespace cva {
 	void payoffTest();
 	void payoffCrtpTest();
 	void payoffDerivTest();
+	void dualTest();
+	void dualVectorTest();
+	void dualCompositionTest();
+
 	void lsmFunctionTest();
+	void regressionTest();
 }
 #endif
