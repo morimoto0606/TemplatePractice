@@ -6,7 +6,7 @@
 
 namespace cva {
 	template <typename T>
-	struct max_traits {
+	struct scalar_max_traits {
 		typedef T value_type;
 		typedef T result_type;
 		static const result_type
@@ -16,16 +16,16 @@ namespace cva {
 		}
 	};
 
-	template <>
-	struct max_traits<Dual> {
-		typedef Dual value_type;
-		typedef Dual result_type;
+	template <typename T>
+	struct scalar_max_traits<Dual<T> > {
+		typedef Dual<T> value_type;
+		typedef Dual<T> result_type;
 		static const result_type
 			apply(const value_type& x, const double y)
 		{
-			const double value = std::max(x.value(), y);
-			const double deriv = x.value() >= y ? x.deriv() : 0.0;
-			return Dual(value, deriv);
+			const T value = std::max(x.value(), y);
+			const T deriv = x.value() >= y ? x.deriv() : 0.0;
+			return result_type(value, deriv);
 		}
 	};
 
@@ -39,16 +39,17 @@ namespace cva {
 			return std::exp(x);
 		}
 	};
-	template <>
-	struct exp_traits<Dual> {
+
+	template <typename T>
+	struct exp_traits<Dual<T> > {
 	public:
-		typedef Dual value_type;
-		typedef Dual result_type;
+		typedef Dual<T> value_type;
+		typedef Dual<T> result_type;
 		static const result_type apply(const value_type& x)
 		{
-			const double value = std::exp(x.value());
-			const double deriv = x.deriv() * value;
-			return Dual(value, deriv);
+			const T value = std::exp(x.value());
+			const T deriv = x.deriv() * value;
+			return result_type(value, deriv);
 		}
 	};
 
@@ -62,13 +63,13 @@ namespace cva {
 		}
 	};
 
-	template <>
-	struct log_traits<Dual> {
-		typedef Dual value_type;
-		typedef Dual result_type;
+	template <typename T>
+	struct log_traits<Dual<T> > {
+		typedef Dual<T> value_type;
+		typedef Dual<T> result_type;
 		static const result_type apply(const value_type& x)
 		{
-			return Dual(std::log(x.value()), x.deriv() / x.value());
+			return result_type(std::log(x.value()), x.deriv() / x.value());
 		}
 	};
 
@@ -83,14 +84,14 @@ namespace cva {
 		}
 	};
 
-	template <>
-	struct normal_cdf_traits<Dual> {
-		typedef Dual value_type;
-		typedef Dual result_type;
+	template <typename T>
+	struct normal_cdf_traits<Dual<T> > {
+		typedef Dual<T> value_type;
+		typedef Dual<T> result_type;
 		static const result_type apply(const value_type& x)
 		{
 			boost::math::normal_distribution<> normal;
-			return Dual(boost::math::cdf(normal, x.value()),
+			return result_type(boost::math::cdf(normal, x.value()),
 				x.deriv() * boost::math::pdf(normal, x.value()));
 		}
 	};

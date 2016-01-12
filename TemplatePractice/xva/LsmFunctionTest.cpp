@@ -16,13 +16,13 @@ namespace cva {
 		return x * x;
 	}
 
-	Dual g0(const Dual& x) {
-		return Dual(1.0);
+	Dual<double> g0(const Dual<double>& x) {
+		return Dual<double>(1.0);
 	}
-	Dual g1(const Dual& x) {
+	Dual<double> g1(const Dual<double>& x) {
 		return x;
 	}
-	Dual g2(const Dual x) {
+	Dual<double> g2(const Dual<double> x) {
 		return x * x;
 	}
 	void lsmFunctionTest()
@@ -43,16 +43,16 @@ namespace cva {
 		std::cout << "operator(x)  = 1 + 2x + 3x^2, x=2, expected 17" 
 			<< ',' << "actual = " <<  lsm(2.0) << std::endl;
 
-		ublas::vector<boost::function<Dual (const Dual&)> >  dualFunctions(3);
-		boost::function<Dual (const Dual&)> dualFunction0 = &g0;
-		boost::function<Dual(const Dual&)> dualFunction1 = &g1;
-		boost::function<Dual(const Dual&)> dualFunction2 = &g2;
+		ublas::vector<boost::function<Dual<double> (const Dual<double>&)> >  dualFunctions(3);
+		boost::function<Dual<double> (const Dual<double>&)> dualFunction0 = &g0;
+		boost::function<Dual<double>(const Dual<double>&)> dualFunction1 = &g1;
+		boost::function<Dual<double>(const Dual<double>&)> dualFunction2 = &g2;
 		dualFunctions(0) = dualFunction0;
 		dualFunctions(1) = dualFunction1;
 		dualFunctions(2) = dualFunction2;
-		LsmFunction<Dual, double> lsmDual(a, dualFunctions);
-		Dual x(2.0, 1.0);
-		Dual y = lsmDual(x);
+		LsmFunction<Dual<double>, double> lsmDual(a, dualFunctions);
+		Dual<double> x(2.0, 1.0);
+		Dual<double> y = lsmDual(x);
 		std::cout << "LsmFunctionTest" << std::endl;
 		std::cout << "operator(x)  = 1 + 2x + 3x^2, x=2, expected value = 17, dual = 14"
 			<< ',' << "actual = " << y.value()  << ',' << y.deriv()<< std::endl;

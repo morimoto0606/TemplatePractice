@@ -77,39 +77,39 @@ namespace cva {
  	void payoffDerivTest()
 	{
 		std::cout << "Test PayOffDeriv" << std::endl;
-		ublas::vector<cva::Dual> x(3);
-		x(0) = cva::Dual(1.0);
-		x(1) = cva::Dual(0.1);
-		x(2) = cva::Dual(3.0);
+		ublas::vector<cva::Dual<double>> x(3);
+		x(0) = cva::Dual<double>(1.0);
+		x(1) = cva::Dual<double>(0.1);
+		x(2) = cva::Dual<double>(3.0);
 		std::cout << "x = (" << x(0).value() << ',' 
 			<< x(1).value() << ',' << x(2).value() << ')'  
 			<< std::endl;
 
-		ublas::vector<cva::Dual> d0(3);
-		d0(0) = cva::Dual(0.0, 1.0);
-		d0(1) = cva::Dual(0.0);
-		d0(2) = cva::Dual(0.0);
+		ublas::vector<cva::Dual<double>> d0(3);
+		d0(0) = cva::Dual<double>(0.0, 1.0);
+		d0(1) = cva::Dual<double>(0.0);
+		d0(2) = cva::Dual<double>(0.0);
 
-		ublas::vector<cva::Dual> d1(3);
-		d1(0) = cva::Dual(0.0);
-		d1(1) = cva::Dual(0.0, 1.0);
-		d1(2) = cva::Dual(0.0);
+		ublas::vector<cva::Dual<double>> d1(3);
+		d1(0) = cva::Dual<double>(0.0);
+		d1(1) = cva::Dual<double>(0.0, 1.0);
+		d1(2) = cva::Dual<double>(0.0);
 
-		ublas::vector<cva::Dual> d2(3);
-		d2(0) = cva::Dual(0.0);
-		d2(1) = cva::Dual(0.0);
-		d2(2) = cva::Dual(0.0, 1.0);
+		ublas::vector<cva::Dual<double>> d2(3);
+		d2(0) = cva::Dual<double>(0.0);
+		d2(1) = cva::Dual<double>(0.0);
+		d2(2) = cva::Dual<double>(0.0, 1.0);
 
 		cva::Forward fwd(2.0, -1.0);
 		cva::European eur(2.0, -1.0);
 
-		cva::Dual resultFwd0 = fwd(x + d0);
-		cva::Dual resultFwd1 = fwd(x + d1);
-		cva::Dual resultFwd2 = fwd(x + d2);
+		cva::Dual<double> resultFwd0 = fwd(x + d0);
+		cva::Dual<double> resultFwd1 = fwd(x + d1);
+		cva::Dual<double> resultFwd2 = fwd(x + d2);
 
-		cva::Dual resultEur0 = eur(x + d0);
-		cva::Dual resultEur1 = eur(x + d1);
-		cva::Dual resultEur2 = eur(x + d2);
+		cva::Dual<double> resultEur0 = eur(x + d0);
+		cva::Dual<double> resultEur1 = eur(x + d1);
+		cva::Dual<double> resultEur2 = eur(x + d2);
 
 		//std::cout << "(fwd(x), d/dx0 fwd(x)) = " <<  resultFwd0.value() << ',' << resultFwd0.deriv() << std::endl;
 		//std::cout << "(fwd(x), d/dx1 fwd(x)) = " << resultFwd1.value() << ',' << resultFwd1.deriv() << std::endl;

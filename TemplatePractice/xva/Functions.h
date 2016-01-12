@@ -5,10 +5,10 @@
 
 namespace cva{
 	template <typename T>
-	typename max_traits<T>::value_type 
+	typename scalar_max_traits<T>::value_type
 		max(const T& x, const double floor)
 	{
-		return max_traits<T>::apply(x, floor);
+		return scalar_max_traits<T>::apply(x, floor);
 	}
 	
 	template <typename T>

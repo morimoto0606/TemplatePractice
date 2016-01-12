@@ -17,13 +17,13 @@ namespace cva {
 		return x * x;
 	}
 
-	Dual w0(const Dual& x) {
-		return Dual(1.0);
+	Dual<double> w0(const Dual<double>& x) {
+		return Dual<double>(1.0);
 	}
-	Dual w1(const Dual& x) {
+	Dual<double> w1(const Dual<double>& x) {
 		return x;
 	}
-	Dual w2(const Dual x) {
+	Dual<double> w2(const Dual<double> x) {
 		return x * x;
 	}
 
@@ -59,27 +59,27 @@ namespace cva {
 		}
 
 		{
-			ublas::vector<boost::function<Dual(const Dual&)> >  dualFunctions(3);
-			boost::function<Dual(const Dual&)> dualFunction0 = &w0;
-			boost::function<Dual(const Dual&)> dualFunction1 = &w1;
-			boost::function<Dual(const Dual&)> dualFunction2 = &w2;
+			ublas::vector<boost::function<Dual<double>(const Dual<double>&)> >  dualFunctions(3);
+			boost::function<Dual<double>(const Dual<double>&)> dualFunction0 = &w0;
+			boost::function<Dual<double>(const Dual<double>&)> dualFunction1 = &w1;
+			boost::function<Dual<double>(const Dual<double>&)> dualFunction2 = &w2;
 			dualFunctions(0) = dualFunction0;
 			dualFunctions(1) = dualFunction1;
 			dualFunctions(2) = dualFunction2;
 
-			const Dual x0(100.0, 1.0);
-			const Dual mu(0.1);
-			const Dual sigma(0.3);
+			const Dual<double> x0(100.0, 1.0);
+			const Dual<double> mu(0.1);
+			const Dual<double> sigma(0.3);
 			const std::size_t pathNum = 1000;
 			const std::size_t gridNum = 2;
 			const double dt = 0.5;
 			const std::size_t seed = 2;
-			const Path<Dual> dualPath(x0, mu, sigma, pathNum,
+			const Path<Dual<double>> dualPath(x0, mu, sigma, pathNum,
 				gridNum, dt, seed);
 
 			std::size_t gridIndex = 1;
 			European payoff(1.0, -1.0);
-			//ublas::vector<Dual> coeff = regresssion(gridIndex, payoff, dualPath,
+			//ublas::vector<Dual<double>> coeff = regresssion(gridIndex, payoff, dualPath,
 			//	dualFunctions);
 
 		}
