@@ -32,6 +32,12 @@ namespace cva{
 		return normal_cdf_traits<T>::apply(x);
 	}
 
+	template <typename T>
+	typename sqrt_traits<T>::result_type sqrt(
+		const T& x)
+	{
+		return sqrt_traits<T>::apply(x);
+	}
 	//template <typename T>
 	//typename monomial_traits<T>::value_type
 	//	monomial(const T& x, const std::size_t p)

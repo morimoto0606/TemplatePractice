@@ -79,8 +79,10 @@ namespace cva {
 
 			std::size_t gridIndex = 1;
 			European payoff(1.0, -1.0);
-			//ublas::vector<Dual<double>> coeff = regresssion(gridIndex, payoff, dualPath,
-			//	dualFunctions);
+			ublas::matrix<Dual<double> > z = getBasisMatrix(Dual<double>(2.0, 1.0), dualFunctions);
+		
+			ublas::vector<Dual<double>> coeff = regresssion(gridIndex, payoff, dualPath,
+				dualFunctions);
 
 		}
 	}

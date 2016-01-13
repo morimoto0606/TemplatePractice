@@ -10,7 +10,6 @@
 #include <boost/foreach.hpp>
 #include "Dual.h"
 #include "Functions.h"
-#include "type_traits.h"
 #include "function_traits.h"
 
 namespace cva {

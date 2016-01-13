@@ -7,6 +7,7 @@
 #include <boost/numeric/ublas/triangular.hpp> 
 #include <boost/numeric/ublas/lu.hpp>     
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/type_traits.hpp>
 
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
@@ -17,8 +18,8 @@ namespace cva {
 		const ublas::vector<boost::function<T(const T&)> >& functions)
 	{
 		const std::size_t basisNum = functions.size();
-		ublas::vector<T> coeffient(basisNum, 0);
-		ublas::matrix<T> basisMatrix(basisNum, basisNum, 0);
+		ublas::vector<T> coeffient(basisNum);
+		ublas::matrix<T> basisMatrix(basisNum, basisNum);
 		for (std::size_t i = 0; i < basisNum; ++i) {
 			for (std::size_t j = 0; j < basisNum; ++j) {
 				basisMatrix(i, j)
@@ -36,8 +37,8 @@ namespace cva {
 		const ublas::vector<boost::function<T(const T&)> >& functions)
 	{
 		const std::size_t basisNum = functions.size();
-		T payoffValue = payoff(timewisePath);
-		ublas::vector<T> payOffBasis(basisNum, 0);
+		T payoffValue = payoff()(timewisePath);
+		ublas::vector<T> payOffBasis(basisNum);
 		for (std::size_t i = 0; i < basisNum; ++i) {
 			payOffBasis(i)
 				= (functions(i))(pathValue) * payoffValue;
@@ -50,16 +51,16 @@ namespace cva {
 		std::size_t gridIndex,
 		const PayOff<U>& payoff,
 		const Path<T>& path,
-		const ublas::vector<boost::function<T(const T&)> >& functions)
+		const ublas::vector<boost::function<T (const T&)> >& functions)
 	{
 		const std::size_t basisNum = functions.size();
 		const std::size_t pathNum = path.pathNum();
 		const std::size_t gridNum = path.gridNum();
 		
 		// matrix (basis(i) * basis(j))
-		ublas::matrix<T> basisMatrix(basisNum, basisNum, 0);
+		ublas::matrix<T> basisMatrix(basisNum, basisNum);
 		//vector (basis(i) *Payoff)
-		ublas::vector<T> payoffBasis(basisNum, 0);
+		ublas::vector<T> payoffBasis(basisNum);
 
 		// take expectation of basisMatrix and payoffBasis
 		for (std::size_t k = 0; k< pathNum; ++k) {
@@ -79,11 +80,11 @@ namespace cva {
 
 		// LU Decomposition
 		ublas::matrix<T> basisInverse = ublas::identity_matrix<double>(3);
-		ublas::lu_factorize(basisMatrix, pm);
+		//ublas::lu_factorize(basisMatrix, pm);
 		
 		ublas::lu_substitute(basisMatrix, pm, basisInverse);
-		ublas::vector<T> coeffient
-			= ublas::prod(payoffBasis, basisInverse);
+		ublas::vector<T> coeffient;
+		//	= ublas::prod(payoffBasis, basisInverse);
 
 		return coeffient;
 	}

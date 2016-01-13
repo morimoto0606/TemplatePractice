@@ -11,10 +11,9 @@ namespace cva {
 	public:
 		virtual ~PayOff() {}
 
-		template <typename T>
-		typename T::value_type operator()(const T& x) const
+		const Derived& operator()() const
 		{
-			return static_cast<const Derived&>(*this).operator()(x);
+			return static_cast<const Derived&>(*this);
 		}
 	};
 
@@ -39,12 +38,12 @@ namespace cva {
 		template <typename T>
 		typename T::value_type operator()(const T& x) const
 		{
-			return cva::max(*(x.end() - 1) + _b, 0.0) * _a;
+			return cva::max(_a * *(x.end() - 1) + _b, 0.0);
 		}
 		template <typename T>
 		T operator()(const ublas::vector<T>& x) const
 		{
-			return cva::max(*(x.end() - 1) + _b, 0.0) * _a;
+			return cva::max(_a * *(x.end() - 1) + _b, 0.0);
 		}
 	private:
 		double _a;

@@ -95,7 +95,27 @@ namespace cva {
 				x.deriv() * boost::math::pdf(normal, x.value()));
 		}
 	};
-
+	
+	template <typename T>
+	struct sqrt_traits {
+		typedef T value_type;
+		typedef T result_type;
+		static const result_type apply(const value_type& x)
+		{
+			return std::sqrt(x);
+		}
+	};
+	template <typename T>
+	struct sqrt_traits<Dual<T> > {
+		typedef Dual<T> value_type;
+		typedef Dual<T> result_type;
+		static const result_type apply(const value_type& x)
+		{
+			const T value = std::sqrt(x.value());
+			const T deriv = 0.5 / value * x.deriv();
+			return Dual(value, deriv);
+		}
+	};
 	//template <typename T>
 	//struct monomial_traits {
 	//	typedef T value_type;

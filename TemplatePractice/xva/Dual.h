@@ -1,6 +1,6 @@
 #ifndef DUAL_H_INCLUDED
 #define DUAL_H_INCLUDED
-#include "type_traits.h"
+
 namespace cva {
 	template <typename T>
 	class Dual {
@@ -152,7 +152,7 @@ namespace cva {
 		return rhs * lhs;
 	}
 	template <typename T>
-	Dual<T> operator /(const Dual<T>lhs, const Dual<T>& rhs)
+	Dual<T> operator /(const Dual<T>&lhs, const Dual<T>& rhs)
 	{
 		const T lvalue = lhs.value();
 		const T rvalue = rhs.value();
@@ -162,7 +162,7 @@ namespace cva {
 			(lderiv * rvalue - lvalue * rderiv) / (rvalue * rvalue));
 	}
 	template <typename T>
-	Dual<T> operator /(const Dual<T>lhs, const T& rhs)
+	Dual<T> operator /(const Dual<T>&lhs, const T& rhs)
 	{
 		return Dual<T>(lhs.value() / rhs, lhs.deriv() / rhs);
 	}
@@ -172,5 +172,54 @@ namespace cva {
 		return Dual<T>(lhs.value() / rhs, 
 			-lhs * rhs.deriv() / (rhs.value() * rhs.value()));
 	}
+	template <typename T>
+	bool operator == (const Dual<T>& lhs, const Dual<T>& rhs) {
+		return lhs.value() == rhs.value() && lhs.deriv() == rhs.deriv();
+	}
+	template <typename T>
+	bool operator == (const Dual<T>& lhs, const T& rhs) {
+		return lhs.value() == rhs;
+	}
+	template <typename T>
+	bool operator == (T& lhs, const Dual<T>& rhs) {
+		return rhs == lhs;
+	}
+	template <typename T>
+	bool operator != (const Dual<T>& lhs, const Dual<T>& rhs) {
+		return !(lhs == rhs);
+	}
+	template <typename T>
+	bool operator != (const Dual<T>& lhs, const T& rhs) {
+		return !(lhs == rhs);
+	}
+	template <typename T>
+		bool operator != (const T& lhs, const Dual<T>& rhs) {
+		return !(lhs == rhs);
+	}
+	template <typename T>
+	bool operator < (const Dual<T>& lhs, const Dual<T>& rhs) {
+		return lhs.value() < rhs.value();
+	}
+	template <typename T>
+	bool operator < (const Dual<T>& lhs, const T& rhs) {
+		return lhs.value() < rhs;
+	}
+	template <typename T>
+	bool operator < (const T& lhs, const Dual<T>& rhs) {
+		return lhs < rhs.value();
+	}
+	template <typename T>
+	bool operator > (const Dual<T>& lhs, const Dual<T>& rhs) {
+		return lhs.value() > rhs.value();
+	}
+	template <typename T>
+	bool operator > (const Dual<T>& lhs, const T& rhs) {
+		return lhs.value() > rhs;
+	}
+	template <typename T>
+	bool operator > (const T& lhs, const Dual<T>& rhs) {
+		return lhs > rhs.value();
+	}
+
 } //namespace cva
 #endif

@@ -16,7 +16,7 @@ namespace cva {
 	typename U::value_type payoffFunc(
 		const cva::PayOff<T>& payoff,
 		const U& x) {
-		return payoff(x);
+		return payoff()(x);
 	}
 
 	void payoffTest()
