@@ -30,7 +30,7 @@ namespace cva {
 	}
 
 	template <typename T, typename U>
-	ublas::vector<T> getPayOffBasis(
+	ublas::vector<T> calcPayoffMultBasis(
 		const T& pathValue,
 		const ublas::vector<T>& timewisePath,
 		const PayOff<U>& payoff,
@@ -38,14 +38,42 @@ namespace cva {
 	{
 		const std::size_t basisNum = functions.size();
 		T payoffValue = payoff()(timewisePath);
-		ublas::vector<T> payOffBasis(basisNum);
+		ublas::vector<T> payoffMultBasis(basisNum);
 		for (std::size_t i = 0; i < basisNum; ++i) {
-			payOffBasis(i)
+			payoffMultBasis(i)
 				= (functions(i))(pathValue) * payoffValue;
 		}
-		return payOffBasis;
+		return payoffMultBasis;
 	}
 	
+	
+	/* Matrix inversion routine.
+	Uses lu_factorize and lu_substitute in uBLAS to invert a matrix */
+	template<class T>
+	bool invertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse)
+	{
+		typedef ublas::permutation_matrix<std::size_t> pmatrix;
+
+		// create a working copy of the input
+		ublas::matrix<T> A(input);
+
+		// create a permutation matrix for the LU-factorization
+		pmatrix pm(A.size1());
+
+		// perform LU-factorization
+		int res = ublas::lu_factorize(A, pm);
+		if (res != 0)
+			return false;
+
+		// create identity matrix of "inverse"
+		inverse.assign(ublas::identity_matrix<T>(A.size1()));
+
+		// backsubstitute to get the inverse
+		ublas::lu_substitute(A, pm, inverse);
+		return true;
+	}
+
+
 	template <typename T, typename U>
 	ublas::vector<T> regresssion(
 		std::size_t gridIndex,
@@ -58,34 +86,29 @@ namespace cva {
 		const std::size_t gridNum = path.gridNum();
 		
 		// matrix (basis(i) * basis(j))
-		ublas::matrix<T> basisMatrix(basisNum, basisNum);
+		ublas::matrix<T> basisMatrix 
+			= ublas::zero_matrix<T>(basisNum, basisNum);
 		//vector (basis(i) *Payoff)
-		ublas::vector<T> payoffBasis(basisNum);
+		ublas::vector<T> payoffMultBasis
+			=ublas::zero_vector<T>(basisNum);
 
 		// take expectation of basisMatrix and payoffBasis
 		for (std::size_t k = 0; k< pathNum; ++k) {
 			basisMatrix += getBasisMatrix(
 				path.getPathValue(k, gridIndex),
 				functions);
-			payoffBasis += getPayOffBasis(
+			payoffMultBasis += calcPayoffMultBasis(
 				path.getPathValue(k, gridIndex),
 				path.getTimewisePath(k),
 				payoff, functions);
 		}
 		basisMatrix /= pathNum;
-		payoffBasis /= pathNum;
-
-		ublas::matrix<T> originalBasis(basisMatrix);
-		ublas::permutation_matrix<> pm(basisNum);
+		payoffMultBasis /= pathNum;
 
 		// LU Decomposition
-		ublas::matrix<T> basisInverse = ublas::identity_matrix<double>(3);
-		//ublas::lu_factorize(basisMatrix, pm);
-		
-		ublas::lu_substitute(basisMatrix, pm, basisInverse);
-		ublas::vector<T> coeffient;
-		//	= ublas::prod(payoffBasis, basisInverse);
-
-		return coeffient;
+		ublas::matrix<T> basisInverse
+			=ublas::identity_matrix<T>(basisNum, basisNum);
+		bool isScess = invertMatrix(basisMatrix, basisInverse);
+		return ublas::prod(payoffMultBasis, basisInverse);
 	}
 }//namespace cva {

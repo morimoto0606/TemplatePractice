@@ -13,5 +13,7 @@ namespace cva {
 
 	void lsmFunctionTest();
 	void regressionTest();
+	void optionByLsmTest();
+	void greeksByLsmTest();
 }
 #endif

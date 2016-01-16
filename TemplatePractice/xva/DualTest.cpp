@@ -63,7 +63,7 @@ namespace cva {
 	cva::Dual<double> y = quadFunc(x + d);
 	std::cout << "(d/dx quadFunc)(1.0) = " 
 		<< y.value() << ',' << y.deriv() << std::endl;
-	y = cva::max(x + d, 0.0);
+	y = cva::zeroFloor(x + d);
 	std::cout << y.value() << ',' << y.deriv() << std::endl;
 	}
 

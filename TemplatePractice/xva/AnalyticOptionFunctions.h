@@ -6,6 +6,7 @@ namespace cva {
 	template <typename T>
 	T forwardFunction(const T& x,
 		const T& mu, const T& sigma,
+		const double a,
 		const double b,
 		const double maturity) 
 	{

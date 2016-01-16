@@ -28,6 +28,8 @@ int main()
 	cva::dualCompositionTest();
 	cva::lsmFunctionTest();
 	cva::regressionTest();
+	cva::optionByLsmTest();
+	cva::greeksByLsmTest();
 	//ublas::vector<double> a(2);
 	//a(0) = 3;
 	//a(1) = 4;

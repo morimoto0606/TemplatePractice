@@ -6,25 +6,25 @@
 
 namespace cva {
 	template <typename T>
-	struct scalar_max_traits {
+	struct zero_floor_traits {
 		typedef T value_type;
 		typedef T result_type;
 		static const result_type
-			apply(const value_type& x, const double y)
+			apply(const value_type& x)
 		{
-			return std::max(x, y);
+			return std::max(x, 0.0);
 		}
 	};
 
 	template <typename T>
-	struct scalar_max_traits<Dual<T> > {
+	struct zero_floor_traits<Dual<T> > {
 		typedef Dual<T> value_type;
 		typedef Dual<T> result_type;
 		static const result_type
-			apply(const value_type& x, const double y)
+			apply(const value_type& x)
 		{
-			const T value = std::max(x.value(), y);
-			const T deriv = x.value() >= y ? x.deriv() : 0.0;
+			const T value = std::max(x.value(), 0.0);
+			const T deriv = x.value() >= 0 ? x.deriv() : 0.0;
 			return result_type(value, deriv);
 		}
 	};
@@ -116,15 +116,7 @@ namespace cva {
 			return Dual(value, deriv);
 		}
 	};
-	//template <typename T>
-	//struct monomial_traits {
-	//	typedef T value_type;
-	//	typedef value_type result_type;
-	//	static const result_type apply(const value_type& x)
-	//	{
-	//		return 
-	//	}
-	//};
+
 
 } //namespace cva
 #endif
