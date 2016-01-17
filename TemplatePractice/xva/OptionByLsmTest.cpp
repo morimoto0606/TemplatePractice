@@ -27,7 +27,7 @@ namespace cva {
 			const Path<double> path(x0, mu, sigma, pathNum,
 				gridNum, dt, seed);
 
-			std::size_t gridIndex = 1;
+			std::size_t gridIndex = 2;
 			Forward payoffFwd(1.0, -100.0);
 			European payoffEur(1.0, -100.0);
 
@@ -53,7 +53,7 @@ namespace cva {
 	{
 		//regression double
 		{
-			std::cout << "OptionByLsmTest" << std::endl;
+			std::cout << "GreeksByLsmTest" << std::endl;
 			
 			ublas::vector<boost::function<double(const double&)> >  functions(3);
 			for (std::size_t i = 0; i < 3; ++i) {

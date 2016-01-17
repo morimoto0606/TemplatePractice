@@ -10,9 +10,7 @@ namespace cva {
 		const double b,
 		const double maturity) 
 	{
-		return a * x 
-			* cva::exp((mu - sigma * sigma / 2.0)
-			* maturity ) + b;
+		return a * x 	* cva::exp(mu	* maturity ) + b;
 	}
 
 	//E[max(aX(t) + b, 0)]
@@ -49,4 +47,16 @@ namespace cva {
 			* cva::normalCdf(dplus) * a;
 	}
 
+	//d/dx E[max(aX(t) + b, 0)]
+	template <typename T>
+	T riskReversal(const T& x,
+		const T& mu, const T& sigma,
+		const double gearing, const double strike1,
+		const double strike2,
+		const double maturity)
+	{
+		return europeanFunction(x, mu, sigma, gearing,
+			-strike1, maturity)
+			- europeanFunction(x, mu, sigma, -gearing, strike2, maturity);
+	}
 } // namespace cva

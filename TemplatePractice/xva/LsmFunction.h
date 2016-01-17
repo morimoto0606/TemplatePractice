@@ -13,6 +13,7 @@ namespace cva {
 		typedef value_type result_type;
 		typedef boost::function<result_type(const value_type&)> function_type;
 
+		LsmFunction() {}
 		LsmFunction(const ublas::vector<coeffcient_type>& coeffs,
 			const ublas::vector <boost::function<result_type (const value_type&)> >&
 			basisFunctions) : _coefficients(coeffs), _basisFunctions(basisFunctions) {}

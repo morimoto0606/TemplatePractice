@@ -9,14 +9,6 @@
 #include <boost/make_shared.hpp>
 #include "Test.h"
 
-//namespace ublas = boost::numeric::ublas;
-//template <typename T>
-//typename ublas::vector_unary_traits<T, T>::result_type
-//foo(const ublas::vector_expression<T>& x)
-//{
-//	std::cout << x()(1) << std::endl;
-//	return x()(1) + x()(0);
-//}
 
 int main()
 {
@@ -30,10 +22,8 @@ int main()
 	cva::regressionTest();
 	cva::optionByLsmTest();
 	cva::greeksByLsmTest();
-	//ublas::vector<double> a(2);
-	//a(0) = 3;
-	//a(1) = 4;
-	//ublas::vector<double> x = foo(a);
+	cva::calcCvaByRegressionFwdTest();
+
 	int i = 0;
 	std::cin >> i;
 	return i;

@@ -68,15 +68,20 @@ namespace cva {
 			return _pathMatrix(pathIndex, gridIndex);
 		}
 
-		const ublas::vector<value_type> 
+		ublas::vector<value_type>
 			getTimewisePath(const size_type i) const
 		{
 			return ublas::row(_pathMatrix, i);
 		}
-		const ublas::vector<value_type>
+		ublas::vector<value_type>
 			getPathwisePath(const size_type j) const
 		{
 			return ublas::column(_pathMatrix, j);
+		}
+		const ublas::matrix<value_type>&
+			getPathMatrix() const
+		{
+			return _pathMatrix;
 		}
 		size_type pathNum() const {
 			return _pathMatrix.size1();
@@ -85,9 +90,6 @@ namespace cva {
 			return _pathMatrix.size2();
 		}
 	private:
-		value_type _x0;
-		value_type _mu;
-		value_type _sigma;
 		ublas::matrix<value_type> _pathMatrix;
 	};
 } //namespace cva

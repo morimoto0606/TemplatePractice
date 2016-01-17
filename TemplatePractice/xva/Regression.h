@@ -104,7 +104,6 @@ namespace cva {
 		}
 		basisMatrix /= pathNum;
 		payoffMultBasis /= pathNum;
-
 		// LU Decomposition
 		ublas::matrix<T> basisInverse
 			=ublas::identity_matrix<T>(basisNum, basisNum);

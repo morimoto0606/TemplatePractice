@@ -15,5 +15,6 @@ namespace cva {
 	void regressionTest();
 	void optionByLsmTest();
 	void greeksByLsmTest();
+	void calcCvaByRegressionFwdTest();
 }
 #endif
