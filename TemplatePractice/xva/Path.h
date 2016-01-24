@@ -87,7 +87,7 @@ namespace cva {
 			return _pathMatrix.size1();
 		}
 		size_type gridNum() const {
-			return _pathMatrix.size2();
+			return _pathMatrix.size2() - 1;
 		}
 	private:
 		ublas::matrix<value_type> _pathMatrix;

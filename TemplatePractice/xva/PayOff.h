@@ -9,8 +9,6 @@ namespace cva {
 	template <typename Derived>
 	class PayOff {
 	public:
-		virtual ~PayOff() {}
-
 		const Derived& operator()() const
 		{
 			return static_cast<const Derived&>(*this);
@@ -24,10 +22,14 @@ namespace cva {
 		template <typename T>
 		typename T::value_type operator()(const T& x) const
 		{
-			return *(x.end() - 1) * _a   + _b;
+			return *(x.end() - 1) * _a - _b;
 		}
 		double gearing() const { return _a; }
 		double strike() const { return _b; }
+		ublas::vector<double> strikes() const {
+			ublas::vector<double> x(1, _b);
+			return x;
+		}
 
 	private:
 		double _a;
@@ -42,16 +44,14 @@ namespace cva {
 		template <typename T>
 		typename T::value_type operator()(const T& x) const
 		{
-			return cva::zeroFloor(_a * *(x.end() - 1) + _b);
-		}
-		template <typename T>
-		T operator()(const ublas::vector<T>& x) const
-		{
-			return cva::zeroFloor(_a * *(x.end() - 1) + _b);
+			return cva::zeroFloor(_a * *(x.end() - 1) - _b);
 		}
 		double gearing() const { return _a; }
 		double strike() const { return _b; }
-
+		ublas::vector<double> strikes() const {
+			ublas::vector<double> x(1, _b);
+			return x;
+		}
 	private:
 		double _a;
 		double _b;
@@ -59,24 +59,57 @@ namespace cva {
 
 	class RiskReversal : public PayOff <RiskReversal> {
 	public:
-		RiskReversal(const double& gearing, const double& strike1,
-			const double& strike2) 
-		: _gearing(gearing), _strike1(strike1), _strike2(strike2) {}
+		RiskReversal(const double& a, const double& b1,
+			const double& b2) 
+		: _a(a), _b1(b1), _b2(b2) {}
 
 		template <typename T>
 		typename T::value_type operator()(const T& x) const
 		{
-			return cva::zeroFloor(_gearing * *(x.end() - 1) - _strike1)
-				- cva::zeroFloor(_strike2 -_gearing * *(x.end() - 1));
+			return cva::zeroFloor(_a * *(x.end() - 1) - _b1)
+				- cva::zeroFloor(_b2 -_a * *(x.end() - 1));
 		}
-		double gearing() const { return _gearing; }
-		double strike1() const { return _strike1; }
-		double strike2() const { return _strike2; }
+		double gearing() const { return _a; }
+		double strike1() const { return _b1; }
+		double strike2() const { return _b2; }
 
 	private:
-		double _gearing;
-		double _strike1;
-		double _strike2;
+		double _a;
+		double _b1;
+		double _b2;
+	};
+
+	class Mountain : public PayOff <Mountain> {
+	public:
+		Mountain(const double a, const double b1,
+			const double b2, const double b3, const double b4)
+		: _a(a), _b1(b1), _b2(b2), _b3(b3), _b4(b4) {}
+
+		template <typename T>
+		typename T::value_type operator()(const T& x) const
+		{
+			return cva::zeroFloor(_a * *(x.end() - 1) - _b1)
+				- cva::zeroFloor(_a * *(x.end() - 1) - _b2)
+				- cva::zeroFloor(_a * *(x.end() - 1) - _b3)
+				+ cva::zeroFloor(_a * *(x.end() - 1) - _b4);
+		}
+
+		double gearing() const { return _a; }
+		double strike() const { return _b1; }
+		ublas::vector<double> strikes() const {
+			ublas::vector<double> x(4, 0);
+			x(0) = _b1;
+			x(1) = _b2;
+			x(2) = _b3;
+			x(3) = _b4;
+			return x;
+		}
+	private:
+		double _a;
+		double _b1;
+		double _b2;
+		double _b3;
+		double _b4;
 	};
 } // namespace cva
 

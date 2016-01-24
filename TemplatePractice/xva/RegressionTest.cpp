@@ -28,8 +28,8 @@ namespace cva {
 				gridNum, dt, seed);
 
 			std::size_t gridIndex = 1;
-			Forward payoffFwd(1.0, -100.0);
-			European payoffEur(1.0, -100.0);
+			Forward payoffFwd(1.0, 100.0);
+			European payoffEur(1.0, 100.0);
 
 
 			//ublas::matrix<double> z = getBasisMatrix(2.0, functions);

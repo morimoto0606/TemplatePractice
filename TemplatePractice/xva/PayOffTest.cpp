@@ -38,8 +38,8 @@ namespace cva {
 		}
 		std::cout << m << std::endl;
 
-		cva::Forward fwd(2.0, -1.0);
-		cva::European eur(2.0, -1.0);
+		cva::Forward fwd(2.0, 1.0);
+		cva::European eur(2.0, 1.0);
 
 		std::cout << fwd(x) << ',' << fwd(y) << std::endl;
 		std::cout << eur(x) << ',' << eur(y) << std::endl;
@@ -58,8 +58,8 @@ namespace cva {
 		y(1) = 4.0;
 		y(2) = 5.0;
 
-		cva::Forward fwd(2.0, -1.0);
-		cva::European eur(2.0, -1.0);
+		cva::Forward fwd(2.0, 1.0);
+		cva::European eur(2.0, 1.0);
 
 		std::cout << "x = " << x << std::endl;
 		std::cout << "y = " << y << std::endl;
@@ -100,8 +100,8 @@ namespace cva {
 		d2(1) = cva::Dual<double>(0.0);
 		d2(2) = cva::Dual<double>(0.0, 1.0);
 
-		cva::Forward fwd(2.0, -1.0);
-		cva::European eur(2.0, -1.0);
+		cva::Forward fwd(2.0, 1.0);
+		cva::European eur(2.0, 1.0);
 
 		cva::Dual<double> resultFwd0 = fwd(x + d0);
 		cva::Dual<double> resultFwd1 = fwd(x + d1);

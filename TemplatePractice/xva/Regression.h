@@ -83,7 +83,6 @@ namespace cva {
 	{
 		const std::size_t basisNum = functions.size();
 		const std::size_t pathNum = path.pathNum();
-		const std::size_t gridNum = path.gridNum();
 		
 		// matrix (basis(i) * basis(j))
 		ublas::matrix<T> basisMatrix 

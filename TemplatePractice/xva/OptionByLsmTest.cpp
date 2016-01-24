@@ -28,21 +28,21 @@ namespace cva {
 				gridNum, dt, seed);
 
 			std::size_t gridIndex = 2;
-			Forward payoffFwd(1.0, -100.0);
-			European payoffEur(1.0, -100.0);
+			Forward payoffFwd(1.0, 100.0);
+			European payoffEur(1.0, 100.0);
 
 			ublas::vector<double> coeff;
 			coeff = regresssion(gridIndex, payoffFwd, path, functions);
 			LsmFunction<double, double> lsmFwd(coeff, functions);
 			double optionPremByLsm = lsmFwd(x0);
-			double optionPremByAnalytic = forwardFunction(x0, mu, sigma, 1.0, -100.0, 0.5);
+			double optionPremByAnalytic = forwardFunction(x0, mu, sigma, 1.0, 100.0, 0.5);
 			std::cout << "ForwardByLsm = " << optionPremByLsm
 				<< ',' << "ForwardByAnalytic = " << optionPremByAnalytic <<   std::endl;
 
 			coeff = regresssion(gridIndex, payoffEur, path, functions);
 			LsmFunction<double, double> lsmEur(coeff, functions);
 			optionPremByLsm = lsmEur(x0);
-			optionPremByAnalytic = europeanFunction(x0, mu, sigma, 1.0, -100.0, 0.5);
+			optionPremByAnalytic = europeanFunction(x0, mu, sigma, 1.0, 100.0, 0.5);
 
 			std::cout << "EuropeanByLsm = " << optionPremByLsm
 				<< ',' << "EuropeanByAnalytic = " << optionPremByAnalytic << std::endl;
@@ -82,8 +82,8 @@ namespace cva {
 				gridNum, dt, seed);
 
 			std::size_t gridIndex = 1;
-			Forward payoffFwd(1.0, -100.0);
-			European payoffEur(1.0, -100.0);
+			Forward payoffFwd(1.0, 100.0);
+			European payoffEur(1.0, 100.0);
 
 			ublas::vector<double> coeff;
 			coeff = regresssion(gridIndex, payoffFwd, path, functions);
@@ -97,7 +97,7 @@ namespace cva {
 			coeff = regresssion(gridIndex, payoffEur, path, functions);
 			LsmFunction<Dual<double>, double> lsmEur(coeff, dualFunctions);
 			optionPremByLsm = lsmEur(x0Dual);
-			optionPremByAnalytic = europeanFunction(x0Dual, muDual, sigmaDual, 1.0, -100.0, 0.5);
+			optionPremByAnalytic = europeanFunction(x0Dual, muDual, sigmaDual, 1.0, 100.0, 0.5);
 
 			std::cout << "EuropeanByLsm = " << optionPremByLsm.value() << ','<< optionPremByLsm.deriv()
 				<< ',' << "EuropeanByAnalytic = " << optionPremByAnalytic.value() << ',' << optionPremByAnalytic.deriv() << std::endl;

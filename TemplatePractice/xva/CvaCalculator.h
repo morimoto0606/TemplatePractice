@@ -11,7 +11,8 @@
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
 	enum shockTypeEnum { undEnum = 0, volEnum = 1 };
-	enum productTypeEnum { fwdEnum = 0, eurEnum = 1, rrEnum =2};
+	enum productTypeEnum { fwdEnum = 0, eurEnum = 1,
+		rrEnum =2, mountainEnum = 3};
 
 	template <typename T>
 	T calcCvaUsingExplicitExposure(
@@ -23,11 +24,11 @@ namespace cva {
 		for (std::size_t pathIndex = 0; 
 		pathIndex < path.pathNum(); ++pathIndex) {
 			T pathwiseValue(0.0);
-			for (std::size_t gridIndex = 0; 
-			gridIndex < path.gridNum() - 1; ++gridIndex) {
+			for (std::size_t gridIndex = 1; 
+			gridIndex <= path.gridNum(); ++gridIndex) {
 				pathwiseValue += cva::zeroFloor(
-					exposureFunctions(gridIndex + 1)(
-						path.getPathValue(pathIndex, gridIndex + 1)));
+					exposureFunctions(gridIndex)(
+						path.getPathValue(pathIndex, gridIndex)));
 			}
 			cvaValue += pathwiseValue;
 		}
@@ -45,10 +46,10 @@ namespace cva {
 		for (std::size_t pathIndex = 0;
 		pathIndex < path.pathNum(); ++pathIndex) {
 			T pathwiseValue(0.0);
-			for (std::size_t gridIndex = 0;
-			gridIndex < path.gridNum() - 1; ++gridIndex) {
-				if ((exposureFunctions(gridIndex + 1)(
-					path.getPathValue(pathIndex, gridIndex + 1))).value() > 0.0) {
+			for (std::size_t gridIndex = 1;
+			gridIndex <= path.gridNum(); ++gridIndex) {
+				if ((exposureFunctions(gridIndex)(
+					path.getPathValue(pathIndex, gridIndex))).value() > 0.0) {
 					pathwiseValue += 
 						payoff()(path.getTimewisePath(pathIndex));
 				}
@@ -67,7 +68,7 @@ namespace cva {
 		const Dual<double> x0Dual = shockType
 			== undEnum ? Dual<double>(x0, 1.0) : Dual<double>(x0, 0.0);
 		const Dual<double> sigmaDual = shockType
-			== volEnum ? Dual<double>(sigma, 0.0) : Dual<double>(sigma, 0.0);
+			== volEnum ? Dual<double>(sigma,1.0) : Dual<double>(sigma, 0.0);
 		const Dual<double> muDual(mu, 0.0);
 		return Path<Dual<double> >(x0Dual, muDual,
 			sigmaDual, pathNum, gridNum, dt, seed);
@@ -94,12 +95,13 @@ namespace cva {
 
 		ublas::vector<boost::function<Dual<double>(
 			const Dual<double>&)> >
-			lsmFunctions(path.gridNum());
-		for (std::size_t gridIndex = 0; gridIndex < path.gridNum(); ++gridIndex) {
+			lsmFunctions(path.gridNum() + 1);
+		for (std::size_t gridIndex = 0; gridIndex <= path.gridNum(); ++gridIndex) {
 			ublas::vector<double> coeff;
 			coeff = regresssion(gridIndex, payoff, path, functions);
 			lsmFunctions(gridIndex)
-				= LsmFunction<Dual<double>, double>(coeff, dualFunctions);
+				= LsmFunction<Dual<double>, double>(
+					coeff, dualFunctions);
 		}
 		return lsmFunctions;
 	}
@@ -112,8 +114,8 @@ namespace cva {
 			const double fwdCoeffA, const double fwdCoeffB)
 	{
 		ublas::vector<boost::function<Dual<double>(
-			const Dual<double>&)> > fwdFunctions(gridNum);
-		for (std::size_t gridIndex = 0; gridIndex < gridNum; ++gridIndex) {
+			const Dual<double>&)> > fwdFunctions(gridNum + 1);
+		for (std::size_t gridIndex = 0; gridIndex <= gridNum; ++gridIndex) {
 			const double tau = maturity
 				* static_cast<double>(gridNum - gridIndex)
 				/ static_cast<double>(gridNum);
@@ -133,8 +135,8 @@ namespace cva {
 			const double fwdCoeffA, const double fwdCoeffB)
 	{
 		ublas::vector<boost::function<Dual<double>(
-			const Dual<double>&)> > eurFunctions(gridNum);
-		for (std::size_t gridIndex = 0; gridIndex < gridNum; ++gridIndex) {
+			const Dual<double>&)> > eurFunctions(gridNum + 1);
+		for (std::size_t gridIndex = 0; gridIndex <= gridNum; ++gridIndex) {
 			const double tau = maturity
 				* static_cast<double>(gridNum - gridIndex)
 				/ static_cast<double>(gridNum);
@@ -148,6 +150,28 @@ namespace cva {
 
 	ublas::vector<boost::function<Dual<double>(
 		const Dual<double>&)> >
+		makeAnalyticMountainExposures(
+			const double mu, const double sigma,
+			const std::size_t gridNum, const double maturity,
+			const double gearing, const double strike1,
+			const double strike2, const double strike3, const double strike4)
+	{
+		ublas::vector<boost::function<Dual<double>(
+			const Dual<double>&)> > functions(gridNum + 1);
+		for (std::size_t gridIndex = 0; gridIndex <= gridNum; ++gridIndex) {
+			const double tau = maturity
+				* static_cast<double>(gridNum - gridIndex)
+				/ static_cast<double>(gridNum);
+			functions(gridIndex)
+				= boost::bind(mountain<Dual<double> >, _1,
+					Dual<double>(mu), Dual<double>(sigma),
+					gearing, strike1, strike2, strike3, strike4, tau);
+		}
+		return functions;
+	}
+
+	ublas::vector<boost::function<Dual<double>(
+		const Dual<double>&)> >
 		makeAnalyticRiskReversalExposures(
 			const double mu, const double sigma,
 			const std::size_t gridNum, const double maturity,
@@ -156,7 +180,7 @@ namespace cva {
 	{
 		ublas::vector<boost::function<Dual<double>(
 			const Dual<double>&)> > rrFunctions(gridNum);
-		for (std::size_t gridIndex = 0; gridIndex < gridNum; ++gridIndex) {
+		for (std::size_t gridIndex = 0; gridIndex <= gridNum; ++gridIndex) {
 			const double tau = maturity
 				* static_cast<double>(gridNum - gridIndex)
 				/ static_cast<double>(gridNum);
@@ -170,11 +194,10 @@ namespace cva {
 
 	//Calculate Cva By Regression Exposure	
 	template <typename T>
-	Dual<double> calcCvaByRegression(
+	Dual<double> calcCvaByRegressionExposure(
 		const double x0, const double mu, const double sigma,
 		const PayOff<T>& payoff, const double maturity,
 		const std::size_t gridNum, const std::size_t pathNum,
-		const std::size_t dualPathNum,
 		const shockTypeEnum shockType, const std::size_t seed,
 		const bool useImplicitMethod)
 	{
@@ -183,7 +206,7 @@ namespace cva {
 			pathNum, gridNum, dt, seed);
 
 		const Path<Dual<double> > pathDual = makeDualPath(
-			x0, mu, sigma, dt, gridNum, dualPathNum, shockType, seed);
+			x0, mu, sigma, dt, gridNum, pathNum, shockType, seed);
 
 		ublas::vector<boost::function<Dual<double>(
 			const Dual<double>&)> > lsmFunctions =
@@ -197,18 +220,17 @@ namespace cva {
 
 	//Calculate Cva By Analytic Exposure
 	template <typename T>
-	Dual<double> calcCvaByAnalytic(
+	Dual<double> calcCvaByAnalyticExposure(
 		const double x0, const double mu, const double sigma,
 		const PayOff<T>& payoff, const double maturity,
 		const std::size_t gridNum, const std::size_t pathNum,
-		const std::size_t dualPathNum,
 		const shockTypeEnum shockType, const std::size_t seed,
 		const productTypeEnum productType, const bool useImplicitMethod)
 	{
 		const double dt = maturity / gridNum;
 
 		const Path<Dual<double> > pathDual = makeDualPath(
-			x0, mu, sigma, dt, gridNum, dualPathNum, shockType, seed);
+			x0, mu, sigma, dt, gridNum, pathNum, shockType, seed);
 
 		ublas::vector<boost::function<Dual<double>(
 			const Dual<double>&)> > exposureFunctions;
@@ -225,11 +247,12 @@ namespace cva {
 				payoff().gearing(), payoff().strike());
 			break;
 
-		//case rrEnum:
-		//	exposureFunctions = makeAnalyticRiskReversalExposures(
-		//		mu, sigma, pathDual.gridNum(), maturity,
-		//		payoff().gearing(), payoff().strike1(), pyoff()(strike2));
-		//	break;
+		case mountainEnum:
+			exposureFunctions = makeAnalyticMountainExposures(
+				mu, sigma, pathDual.gridNum(), maturity,
+				payoff().gearing(), payoff().strikes()(0), payoff().strikes()(1),
+				payoff().strikes()(2), payoff().strikes()(3));
+			break;
 		}
 
 
@@ -240,4 +263,80 @@ namespace cva {
 				exposureFunctions, pathDual, dt);
 		return cvaValue / static_cast<double>(pathNum);
 	}
-}
+
+	Dual<double> calcCvaFwdByAnalytic(
+		const double x0, const double mu, const double sigma,
+		const Forward& payoff, const double maturity,
+		const std::size_t gridNum, const shockTypeEnum shockType)
+	{
+		Dual<double> cvaValue(0.0);
+		Dual<double> x0Dual = shockType == undEnum
+			? Dual<double>(x0, 1.0)
+			: Dual<double>(x0);
+		Dual<double> sigmaDual = shockType == volEnum
+			? Dual<double>(sigma, 1.0)
+			: Dual<double>(sigma);
+		const double strike = payoff.strike();
+		const double dt = maturity / static_cast<double>(gridNum);
+		for (std::size_t gridIndex = 1; gridIndex <= gridNum; ++gridIndex) {
+			const double t = gridIndex * dt;
+			const double tau = maturity - t;
+			const double gearing = std::exp(mu * tau) * payoff.gearing();
+			cvaValue += europeanFunction<Dual<double> >(x0Dual,
+				Dual<double>(mu), sigmaDual, gearing, strike, t);
+		}
+		return cvaValue;
+	}
+	Dual<double> calcCvaEurByAnalytic(
+		const double x0, const double mu, const double sigma,
+		const European& payoff, const double maturity,
+		const std::size_t gridNum, const shockTypeEnum shockType)
+	{
+		Dual<double> cvaValue(0.0);
+		Dual<double> x0Dual = shockType == undEnum
+			? Dual<double>(x0, 1.0)
+			: Dual<double>(x0);
+		Dual<double> sigmaDual = shockType == volEnum
+			? Dual<double>(sigma, 1.0)
+			: Dual<double>(sigma);
+
+		const double strike = payoff.strike();
+		const double dt = maturity / static_cast<double>(gridNum);
+		for (std::size_t gridIndex = 1; gridIndex <= gridNum; ++gridIndex) {
+			const double gearing = payoff.gearing();
+			const double t = gridIndex * dt;
+			cvaValue += europeanFunction<Dual<double> >(x0Dual,
+				Dual<double>(mu), sigmaDual, gearing, strike, maturity);
+		}
+		return cvaValue * dt;
+	}
+
+	Dual<double> calcCvaMountainByAnalytic(
+		const double x0, const double mu, const double sigma,
+		const Mountain& payoff, const double maturity,
+		const std::size_t gridNum, const shockTypeEnum shockType)
+	{
+		Dual<double> cvaValue(0.0);
+		Dual<double> x0Dual = shockType == undEnum
+			? Dual<double>(x0, 1.0)
+			: Dual<double>(x0);
+		Dual<double> sigmaDual = shockType == volEnum
+			? Dual<double>(sigma, 1.0)
+			: Dual<double>(sigma);
+
+		const double strike1 = payoff.strikes()(0);
+		const double strike2 = payoff.strikes()(1);
+		const double strike3 = payoff.strikes()(2);
+		const double strike4 = payoff.strikes()(3);
+
+		const double dt = maturity / static_cast<double>(gridNum);
+		for (std::size_t gridIndex = 1; gridIndex <= gridNum; ++gridIndex) {
+			const double gearing = payoff.gearing();
+			const double t = gridIndex * dt;
+			cvaValue += mountain<Dual<double> >(x0Dual,
+				Dual<double>(mu), sigmaDual, gearing, strike1,
+				strike2, strike3, strike4, maturity);
+		}
+		return cvaValue * dt;
+	}
+}//namespace cva

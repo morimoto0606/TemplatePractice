@@ -23,7 +23,7 @@ namespace cva {
 		const double strike = 100.0;
 
 		const double a = 1.0;
-		const double b = -strike;
+		const double b = strike;
 		Dual<double> european;
 		European eurPayoff(a, b);
 		for (std::size_t i = 0; i < pathNum; ++i) {
