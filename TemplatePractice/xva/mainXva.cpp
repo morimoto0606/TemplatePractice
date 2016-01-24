@@ -22,21 +22,26 @@ int main()
 	cva::regressionTest();
 	cva::optionByLsmTest();
 	cva::greeksByLsmTest();
-	//cva::cvaForwardTrueValueTest(1.0, 100.0);
-	//cva::cvaEuropeanTrueValueTest(1.0, 100.0);
+	
 	//cva::calcCvaFwdTest();
 	//cva::calcCvaEurTest();
+	
+	//cva::cvaForwardTrueValueTest(1.0, 100.0);
 	//cva::cvaForwardAnalyticExposureTest(1.0, 100);
 	//cva::cvaForwardRegressionExposureTest(1.0, 100);
-	//cva::cvaEuropeanAnalyticExposureTest(1.0, 100);
-	//cva::cvaEuropeanRegressionExposureTest(1.0, 100);
+	
+	cva::cvaEuropeanTrueValueTest(1.0, 50.0);
+	cva::cvaEuropeanAnalyticExposureTest(1.0, 50.0);
+	cva::cvaEuropeanRegressionExposureTest(1.0, 50.0);
 
 	cva::cvaMountainTrueValueTest(1.0,
-		90, 100, 110, 120);
+		110, 120, 130, 140, 10, 10);
 	cva::cvaMountainAnalyticExposureTest(1.0,
-		90, 100, 110, 120);
+		110, 120, 130, 140, 10, 10);
+
 	cva::cvaMountainRegressionExposureTest(1.0,
-		90, 100, 110, 120);
+		110, 120, 130, 140, 10.0, 10);
+
 	int i = 0;
 	std::cin >> i;
 	return i;

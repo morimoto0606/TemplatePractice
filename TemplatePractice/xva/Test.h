@@ -1,6 +1,8 @@
 #ifndef TEST_H_INCLUDED
 #define TEST_H_INCLUDED
 
+#include <iostream>
+
 namespace cva {
 	void pathTest();
 	void europeanTest();
@@ -35,13 +37,16 @@ namespace cva {
 
 	void cvaMountainTrueValueTest(const double gearing,
 		const double strike1, const double strike2,
-		const double strike3, const double strike4);
+		const double strike3, const double strike4,
+		const double maturity, const std::size_t gridNum);
 	void cvaMountainAnalyticExposureTest(const double gearing,
 		const double strike1, const double strike2,
-		const double strike3, const double strike4);
+		const double strike3, const double strike4,
+		const double maturity, const std::size_t gridNum);
 	void cvaMountainRegressionExposureTest(const double gearing,
 		const double strike1, const double strike2,
-		const double strike3, const double strike4);
+		const double strike3, const double strike4,
+		const double maturity, const std::size_t gridNum);
 
 
 }

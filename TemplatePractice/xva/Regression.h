@@ -62,8 +62,9 @@ namespace cva {
 
 		// perform LU-factorization
 		int res = ublas::lu_factorize(A, pm);
-		if (res != 0)
+		if (res != 0) {
 			return false;
+		}
 
 		// create identity matrix of "inverse"
 		inverse.assign(ublas::identity_matrix<T>(A.size1()));

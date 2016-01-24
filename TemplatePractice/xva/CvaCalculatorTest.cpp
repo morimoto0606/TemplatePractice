@@ -217,7 +217,8 @@ namespace cva {
 
 	void cvaMountainAnalyticExposureTest(const double gearing,
 		const double strike1, const double strike2,
-		const double strike3, const double strike4)
+		const double strike3, const double strike4,
+		const double maturity, const std::size_t gridNum)
 	{
 		Mountain payoff(gearing, strike1, strike2, strike3, strike4);
 		for (std::size_t seed = 1; seed <= 1; ++seed) {
@@ -226,16 +227,16 @@ namespace cva {
 			std::cout << "valEUnd, valIUnd, valEdx, valIdx, valEdsigma, valIdsigma" << std::endl;
 			for (std::size_t i = 1; i <= 8; ++i) {
 				Dual<double> valEUnd = calcCvaByAnalyticExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, undEnum, seed,
 					mountainEnum, false);
 				Dual<double> valESigma = calcCvaByAnalyticExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, volEnum, seed,
 					mountainEnum, false);
 				Dual<double> valIUnd = calcCvaByAnalyticExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, undEnum, seed,
 					mountainEnum, true);
 				Dual<double> valISigma = calcCvaByAnalyticExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, volEnum, seed,
 					mountainEnum, true);
 				pathNum *= 2;
 				std::cout << valEUnd.value() << ',' << valIUnd.value() <<
@@ -247,7 +248,8 @@ namespace cva {
 
 	void cvaMountainRegressionExposureTest(const double gearing,
 		const double strike1, const double strike2,
-		const double strike3, const double strike4)
+		const double strike3, const double strike4,
+		const double maturity, const std::size_t gridNum)
 	{
 		Mountain payoff(gearing, strike1, strike2, strike3, strike4);
 		for (std::size_t seed = 1; seed <= 1; ++seed) {
@@ -256,16 +258,16 @@ namespace cva {
 			std::cout << "valEUnd, valIUnd, valEdx, valIdx, valEdsigma, valIdsigma" << std::endl;
 			for (std::size_t i = 1; i <= 8; ++i) {
 				Dual<double> valEUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, undEnum, seed,
 					false);
 				Dual<double> valESigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, volEnum, seed,
 					false);
 				Dual<double> valIUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, undEnum, seed,
 					true);
 				Dual<double> valISigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, volEnum, seed,
 					true);
 				pathNum *= 2;
 				std::cout << valEUnd.value() << ',' << valIUnd.value() <<
@@ -277,14 +279,15 @@ namespace cva {
 
 	void cvaMountainTrueValueTest(const double gearing,
 		const double strike1, const double strike2, 
-		const double strike3, const double strike4)
+		const double strike3, const double strike4,
+		const double maturity, const std::size_t gridNum)
 	{
 		std::cout << "Cva Mountain True Value" << std::endl;
 		Mountain payoff(gearing, strike1, strike2, strike3, strike4);
 		Dual<double> eurDelta = calcCvaMountainByAnalytic(100, 0.0, 0.3,
-			payoff, 10.0, 10, undEnum);
+			payoff, maturity, gridNum, undEnum);
 		Dual<double> eurVega = calcCvaMountainByAnalytic(100, 0.0, 0.3,
-			payoff, 10.0, 10, volEnum);
+			payoff, maturity, gridNum, volEnum);
 		std::cout << eurDelta.value() << ',' << eurDelta.deriv() <<
 			',' << eurVega.deriv() << std::endl;
 	} //	cvaMountainTrueValue
