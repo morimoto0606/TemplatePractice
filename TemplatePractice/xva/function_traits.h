@@ -113,7 +113,7 @@ namespace cva {
 		{
 			const T value = std::sqrt(x.value());
 			const T deriv = 0.5 / value * x.deriv();
-			return Dual(value, deriv);
+			return Dual<double>(value, deriv);
 		}
 	};
 

@@ -30,9 +30,9 @@ int main()
 	//cva::cvaForwardAnalyticExposureTest(1.0, 100);
 	//cva::cvaForwardRegressionExposureTest(1.0, 100);
 	
-	cva::cvaEuropeanTrueValueTest(1.0, 50.0);
-	cva::cvaEuropeanAnalyticExposureTest(1.0, 50.0);
-	cva::cvaEuropeanRegressionExposureTest(1.0, 50.0);
+	cva::cvaEuropeanTrueValueTest(1.0, 100.0);
+	cva::cvaEuropeanAnalyticExposureTest(1.0, 100.0);
+	cva::cvaEuropeanRegressionExposureTest(1.0, 100.0);
 
 	cva::cvaMountainTrueValueTest(1.0,
 		110, 120, 130, 140, 10, 10);

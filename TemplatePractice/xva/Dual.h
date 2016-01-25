@@ -84,6 +84,7 @@ namespace cva {
 
 		Dual& operator/=(const Dual<value_type>& rhs)
 		{
+			const value_type value1 = _value;
 			const value_type deriv1 = _deriv;
 			const value_type value2 = rhs._value;
 			const value_type deriv2 = rhs._deriv;

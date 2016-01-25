@@ -89,4 +89,88 @@ namespace cva{
 		double _order2;
 	};
 } //namespace cva
+
+namespace boost {	namespace numeric {	namespace ublas {
+	// Define properties for a generic scalar type
+	template<>
+	struct scalar_traits<cva::Dual<double> >{
+		typedef scalar_traits<cva::Dual<double> > self_type;
+		typedef cva::Dual<double> value_type;
+		typedef const cva::Dual<double> &const_reference;
+		typedef cva::Dual<double> &reference;
+
+		typedef double real_type;
+		typedef real_type precision_type;       // we do not know what type has more precision then the real_type
+
+		static const unsigned plus_complexity = 1;
+		static const unsigned multiplies_complexity = 1;
+
+		static
+			BOOST_UBLAS_INLINE
+			real_type real(const_reference t) {
+			return t.value();
+		}
+		static
+			BOOST_UBLAS_INLINE
+			real_type imag(const_reference /*t*/) {
+			return 0;
+		}
+		static
+			BOOST_UBLAS_INLINE
+			value_type conj(const_reference t) {
+			return t;
+		}
+
+		static
+			BOOST_UBLAS_INLINE
+			real_type type_abs(const_reference t) {
+			return abs(t.value() + t.deriv());
+		}
+		static
+			BOOST_UBLAS_INLINE
+			value_type type_sqrt(const_reference t) {
+			// force a type conversion back to value_type for intgral types
+			return value_type(cva::sqrt(t));
+		}
+
+		static
+			BOOST_UBLAS_INLINE
+			real_type norm_1(const_reference t) {
+			return self_type::type_abs(t);
+		}
+		static
+			BOOST_UBLAS_INLINE
+			real_type norm_2(const_reference t) {
+			return self_type::type_abs(t);
+		}
+		static
+			BOOST_UBLAS_INLINE
+			real_type norm_inf(const_reference t) {
+			return self_type::type_abs(t);
+		}
+
+		static
+			BOOST_UBLAS_INLINE
+			bool equals(const_reference t1, const_reference t2) {
+			return self_type::norm_inf(t1 - t2) < BOOST_UBLAS_TYPE_CHECK_EPSILON *
+				(std::max) ((std::max) (self_type::norm_inf(t1),
+					self_type::norm_inf(t2)),
+					BOOST_UBLAS_TYPE_CHECK_MIN);
+		}
+	};
+
+	template<>
+	struct type_traits<cva::Dual<double> >
+		: scalar_traits <cva::Dual<double> > {
+		typedef type_traits<cva::Dual<double> > self_type;
+		typedef cva::Dual<double> value_type;
+		typedef const cva::Dual<double> &const_reference;
+		typedef cva::Dual<double> &reference;
+
+		typedef double real_type;
+		typedef real_type precision_type;
+		static const unsigned multiplies_complexity = 1;
+
+	};
+}}}
 #endif

@@ -4,11 +4,11 @@
 
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
-	template <typename T, typename U>
+	template <typename T, typename C>
 	class LsmFunction {
 	public:
 		typedef T value_type;
-		typedef U coeffcient_type;
+		typedef C coeffcient_type;
 		typedef std::size_t size_type;
 		typedef value_type result_type;
 		typedef boost::function<result_type(const value_type&)> function_type;

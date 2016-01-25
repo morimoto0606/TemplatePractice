@@ -10,14 +10,16 @@ namespace cva {
 		Forward payoff(1.0, 100.0);
 
 		Dual<double> cvaExplicit =
-			calcCvaByRegressionExposure(
-				100, 0.0, 0.3, payoff, 10.0, 10, 1000, shockTypeEnum::undEnum, 1, false);
+			calcCvaByRegressionExposure<Forward, double>(
+				100, 0.0, 0.3, payoff, 10.0, 10, 1000, 1000,
+				shockTypeEnum::undEnum, 1, false, false);
 		std::cout << "cvaExplicit = " << cvaExplicit.value()
 			<< ',' << "cvaExplicit deriv = " << cvaExplicit.deriv() << std::endl;
 
 		Dual<double> cvaImplicit =
-			calcCvaByRegressionExposure(
-				100, 0.0, 0.3, payoff, 10.0, 10, 1000, shockTypeEnum::undEnum, 1, true);
+			calcCvaByRegressionExposure<Forward, double>(
+				100, 0.0, 0.3, payoff, 10.0, 10, 1000, 1000, 
+				shockTypeEnum::undEnum, 1, true, false);
 		std::cout << "cvaImplict = " << cvaImplicit.value()
 			<< ',' << "cvaImplicit deriv = " << cvaImplicit.deriv() << std::endl;
 
@@ -75,18 +77,18 @@ namespace cva {
 			std::cout << "Forward convergence test : RegressionExposure" << std::endl;
 			std::cout << "valEUnd, valIUnd, valEdx, valIdx, valEdsigma, valIdsigma" << std::endl;
 			for (std::size_t i = 1; i <= 8; ++i) {
-				Dual<double> valEUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
-					false);
-				Dual<double> valESigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
-					false);
-				Dual<double> valIUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
-					true);
-				Dual<double> valISigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
-					true);
+				Dual<double> valEUnd = calcCvaByRegressionExposure<Forward, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, undEnum, seed,
+					false, false);
+				Dual<double> valESigma = calcCvaByRegressionExposure<Forward, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, volEnum, seed,
+					false, false);
+				Dual<double> valIUnd = calcCvaByRegressionExposure<Forward, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, undEnum, seed,
+					true, false);
+				Dual<double> valISigma = calcCvaByRegressionExposure<Forward, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, volEnum, seed,
+					true, false);
 				pathNum *= 2;
 				std::cout << valEUnd.value() << ',' << valIUnd.value() <<
 					',' << valEUnd.deriv() << ',' << valIUnd.deriv() << ',' <<
@@ -116,14 +118,16 @@ namespace cva {
 		European payoff(1.0, 100.0);
 
 		Dual<double> cvaExplicit =
-			calcCvaByRegressionExposure(
-				100, 0.0, 0.3, payoff, 10.0, 10, 1000, shockTypeEnum::undEnum, 1, false);
+			calcCvaByRegressionExposure<European, double>(
+				100, 0.0, 0.3, payoff, 10.0, 10, 1000, 1000, 
+				shockTypeEnum::undEnum, 1, false, false);
 		std::cout << "cvaExplicit = " << cvaExplicit.value()
 			<< ',' << "cvaExplicit deriv = " << cvaExplicit.deriv() << std::endl;
 
 		Dual<double> cvaImplicit =
-			calcCvaByRegressionExposure(
-				100, 0.0, 0.3, payoff, 10.0, 10, 1000, shockTypeEnum::undEnum, 1, true);
+			calcCvaByRegressionExposure<European, double>(
+				100, 0.0, 0.3, payoff, 10.0, 10, 1000, 1000,
+				shockTypeEnum::undEnum, 1, true, false);
 		std::cout << "cvaImplict = " << cvaImplicit.value()
 			<< ',' << "cvaImplicit deriv = " << cvaImplicit.deriv() << std::endl;
 
@@ -181,22 +185,34 @@ namespace cva {
 			std::cout << "European convergence test : RegressionExposure" << std::endl;
 			std::cout << "valEUnd, valIUnd, valEdx, valIdx, valEdsigma, valIdsigma" << std::endl;
 			for (std::size_t i = 1; i <= 8; ++i) {
-				Dual<double> valEUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
-					false);
-				Dual<double> valESigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
-					false);
-				Dual<double> valIUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, undEnum, seed,
-					true);
-				Dual<double> valISigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, volEnum, seed,
-					true);
+				Dual<double> valEUnd = calcCvaByRegressionExposure<European, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, 
+					undEnum, seed, false, false);
+				Dual<double> valESigma = calcCvaByRegressionExposure<European, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, volEnum, seed,
+					false, false);
+				Dual<double> valIUnd = calcCvaByRegressionExposure<European, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, undEnum, seed,
+					true, false);
+				Dual<double> valISigma = calcCvaByRegressionExposure<European, double>(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, volEnum, seed,
+					true, false);
+				Dual<double> valEUndShock = calcCvaByRegressionExposure<European, Dual<double> >(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, undEnum, seed,
+					false, true);
+				Dual<double> valESigmaShock = calcCvaByRegressionExposure<European, Dual<double> >(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, volEnum, seed,
+					false, true);
+				Dual<double> valIUndShock = calcCvaByRegressionExposure<European, Dual<double> >(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, undEnum, seed,
+					true, true);
+				Dual<double> valISigmaShock = calcCvaByRegressionExposure<European, Dual<double> >(
+					100, 0.0, 0.3, payoff, 10.0, 10, pathNum, pathNum, volEnum, seed,
+					true, true);
 				pathNum *= 2;
-				std::cout << valEUnd.value() << ',' << valIUnd.value() <<
-					',' << valEUnd.deriv() << ',' << valIUnd.deriv() << ',' <<
-					valESigma.deriv() << ',' << valISigma.deriv() << std::endl;
+				std::cout << valEUnd.value() << ',' << valEUndShock.value() << ',' << valIUnd.value() << ',' << valIUndShock.value() << ',' <<
+					',' << valEUnd.deriv() << ',' << valEUndShock.deriv() << ',' << valIUnd.deriv() << ',' << valIUndShock.deriv() << ',' <<
+					valESigma.deriv() << ',' << valESigmaShock.deriv() << ',' << valISigma.deriv()  << ','  << valISigmaShock.deriv() << std::endl;
 			}
 		}
 	}//void cvaEuropeanRegressionExposure
@@ -257,18 +273,18 @@ namespace cva {
 			std::cout << "Mountain convergence test : RegressionExposure" << std::endl;
 			std::cout << "valEUnd, valIUnd, valEdx, valIdx, valEdsigma, valIdsigma" << std::endl;
 			for (std::size_t i = 1; i <= 8; ++i) {
-				Dual<double> valEUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, undEnum, seed,
-					false);
-				Dual<double> valESigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, volEnum, seed,
-					false);
-				Dual<double> valIUnd = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, undEnum, seed,
-					true);
-				Dual<double> valISigma = calcCvaByRegressionExposure(
-					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, volEnum, seed,
-					true);
+				Dual<double> valEUnd = calcCvaByRegressionExposure<Mountain, double>(
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, pathNum, undEnum, seed,
+					false, false);
+				Dual<double> valESigma = calcCvaByRegressionExposure<Mountain, double>(
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, pathNum, volEnum, seed,
+					false, false);
+				Dual<double> valIUnd = calcCvaByRegressionExposure<Mountain, double>(
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, pathNum, undEnum, seed,
+					true, false);
+				Dual<double> valISigma = calcCvaByRegressionExposure<Mountain, double>(
+					100, 0.0, 0.3, payoff, maturity, gridNum, pathNum, pathNum, volEnum, seed,
+					true, false);
 				pathNum *= 2;
 				std::cout << valEUnd.value() << ',' << valIUnd.value() <<
 					',' << valEUnd.deriv() << ',' << valIUnd.deriv() << ',' <<
