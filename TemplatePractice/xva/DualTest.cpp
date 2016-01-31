@@ -1,4 +1,3 @@
-#include "Test.h"
 #include "Dual.h"
 #include "Functions.h"
 #include <boost/numeric/ublas/vector.hpp>

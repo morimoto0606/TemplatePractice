@@ -1,4 +1,3 @@
-#include "Test.h"
 #include "Path.h"
 #include "Dual.h"
 #include "PayOff.h"
@@ -36,7 +35,7 @@ namespace cva {
 		
 		Dual<double> europeanAnalytic
 			= cva::europeanFunction(
-				x0, mu, sigma, a, b, dt * gridNum);
+				x0, mu, sigma, a, b, 0.0, dt * gridNum);
 		std::cout << "europeanOptionByAD(Analytic) (value, deriv) ="
 			<< europeanAnalytic.value() << ',' 
 			<< europeanAnalytic.deriv() << std::endl;

@@ -1,5 +1,4 @@
 #include "Regression.h"
-#include "Test.h"
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/function.hpp>
 #include "Dual.h"
@@ -67,4 +66,3 @@ namespace cva {
 		}
 	}
 }// namespace cva
-

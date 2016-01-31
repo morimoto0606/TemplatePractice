@@ -1,4 +1,3 @@
-#include "Test.h"
 #include "Regression.h"
 #include "PayOff.h"
 #include "AnalyticOptionFunctions.h"
@@ -42,7 +41,8 @@ namespace cva {
 			coeff = regresssion(gridIndex, payoffEur, path, functions);
 			LsmFunction<double, double> lsmEur(coeff, functions);
 			optionPremByLsm = lsmEur(x0);
-			optionPremByAnalytic = europeanFunction(x0, mu, sigma, 1.0, 100.0, 0.5);
+			optionPremByAnalytic = europeanFunction(
+				x0, mu, sigma, 1.0, 100.0, 0.0, 0.5);
 
 			std::cout << "EuropeanByLsm = " << optionPremByLsm
 				<< ',' << "EuropeanByAnalytic = " << optionPremByAnalytic << std::endl;
@@ -97,7 +97,8 @@ namespace cva {
 			coeff = regresssion(gridIndex, payoffEur, path, functions);
 			LsmFunction<Dual<double>, double> lsmEur(coeff, dualFunctions);
 			optionPremByLsm = lsmEur(x0Dual);
-			optionPremByAnalytic = europeanFunction(x0Dual, muDual, sigmaDual, 1.0, 100.0, 0.5);
+			optionPremByAnalytic = europeanFunction(
+				x0Dual, muDual, sigmaDual, 1.0, 100.0, 0.0, 0.5);
 
 			std::cout << "EuropeanByLsm = " << optionPremByLsm.value() << ','<< optionPremByLsm.deriv()
 				<< ',' << "EuropeanByAnalytic = " << optionPremByAnalytic.value() << ',' << optionPremByAnalytic.deriv() << std::endl;

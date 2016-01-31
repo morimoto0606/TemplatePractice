@@ -1,4 +1,3 @@
-#include "Test.h"
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/function.hpp>
 #include "LsmFunction.h"

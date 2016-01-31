@@ -1,6 +1,8 @@
 #pragma once
 #include "Functions.h"
+#include <boost/numeric/ublas/vector.hpp>
 
+namespace ublas = boost::numeric::ublas;
 namespace cva {
 	//E[aX(t) + b]
 	template <typename T>
@@ -13,15 +15,16 @@ namespace cva {
 		return a * x 	* cva::exp(mu	* maturity ) - b;
 	}
 
-	//E[max(aX(t) + b, 0)]
+	//E[max(aX(t) + b, 0) + c] 
 	template <typename T>
 	T europeanFunction(const T& x,
 		const T& mu, const T& sigma,
 		const double a, const double b,
+		const double c,
 		const double maturity) 
 	{
 		if (maturity == 0.0) {
-			return cva::zeroFloor(a * x - b);
+			return cva::zeroFloor(a * x - b) + c;
 		}
 		T dplus = (cva::log(x / (b / a))
 			+ (mu + sigma * sigma / 2.0) * maturity) 
@@ -30,7 +33,7 @@ namespace cva {
 			- sigma * std::sqrt(maturity);
 		return (x * cva::exp(mu * maturity) 
 			* cva::normalCdf(dplus)
-			+ cva::normalCdf(dminus) * (-b / a)) * a;
+			+ cva::normalCdf(dminus) * (-b / a)) * a + c;
 	}
 
 	//d/dx E[max(aX(t) + b, 0)]
@@ -59,24 +62,24 @@ namespace cva {
 		const double maturity)
 	{
 		//b1 > b2 >0
-		return europeanFunction(x, mu, sigma, a, b1, maturity)
-			- europeanFunction(x, mu, sigma, -a, b2, maturity);
+		return europeanFunction(x, mu, sigma, a, b1, 0.0,maturity)
+			- europeanFunction(x, mu, sigma, -a, b2, 0.0, maturity);
 	}
 
 	//   E[max(aX(t) + b1, 0)] - E[max(aX(t) + b2, 0)]
-	//+E[max(aX(t) + b1, 0)] - E[max(aX(t) + b2, 0)]
+	//+E[max(aX(t) + b1, 0)] - E[max(aX(t) + b2, 0)] + c
 	template <typename T>
 	T mountain(const T& x,
 		const T& mu, const T& sigma,
-		const double a, const double b1,
-		const double b2, const double b3, 
-		const double b4,
+		const double a, 
+		const ublas::vector<double>& strikes,
+		const double c,
 		const double maturity)
 	{
 		//b1 < b2 < b3 < b4
-		return europeanFunction(x, mu, sigma, a, b1, maturity)
-			- europeanFunction(x, mu, sigma, a, b2, maturity)
-			- europeanFunction(x, mu, sigma, a, b3, maturity)
-			+ europeanFunction(x, mu, sigma, a, b4, maturity);
+		return europeanFunction(x, mu, sigma, a, strikes(0), 0.0, maturity)
+			- europeanFunction(x, mu, sigma, a, strikes(1), 0.0, maturity)
+			- europeanFunction(x, mu, sigma, a, strikes(2), 0.0, maturity)
+			+ europeanFunction(x, mu, sigma, a, strikes(3), 0.0, maturity) + c;
 	}
 } // namespace cva
