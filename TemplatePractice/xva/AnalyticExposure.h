@@ -12,6 +12,13 @@
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
 
+	template<typename P>
+	struct AnalyticExposureTraits {
+		typedef P payoff_type;
+		typedef ublas::vector<boost::function<Dual<double>(
+			const Dual<double>&)> > result_type;
+	};
+
 	//Calculate Cva By Analytic Exposure
 	template <typename T>
 	Dual<double> calcCvaByAnalyticExposure(

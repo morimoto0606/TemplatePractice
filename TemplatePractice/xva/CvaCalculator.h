@@ -12,6 +12,12 @@
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
 
+	template<typename T, typename U>
+	class CvaCalculator {
+	public:
+	private:
+
+	};
 	template <typename T>
 	T calcCvaUsingExplicitExposure(
 		const ublas::vector<boost::function<

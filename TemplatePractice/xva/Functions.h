@@ -124,7 +124,7 @@ namespace boost {	namespace numeric {	namespace ublas {
 		static
 			BOOST_UBLAS_INLINE
 			real_type type_abs(const_reference t) {
-			return abs(t.value() + t.deriv());
+			return sqrt(t.value() * t.value() + t.deriv() * t.deriv());
 		}
 		static
 			BOOST_UBLAS_INLINE

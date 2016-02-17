@@ -28,7 +28,7 @@ namespace cva {
 
 	void cvaForwardRegressionExposureTest(const double gearing,
 		const double strike, const std::size_t seedLoop,
-		std::size_t  pathNum, std::size_t regNum,
+		std::size_t  pathNum, std::size_t regNum, const std::size_t numOfBasis,
 		const std::size_t pathLoop, const LoopTypeEnum loopType);
 
 	void cvaForwardTrueValueTest(const double gearing,
@@ -42,7 +42,7 @@ namespace cva {
 	void cvaEuropeanRegressionExposureTest(const double gearing,
 		const double strike, const double payoffShift,
 		const std::size_t seedLoop,
-		std::size_t  pathNum, std::size_t regNum,
+		std::size_t  pathNum, std::size_t regNum, const std::size_t numOfBasis,
 		const std::size_t pathLoop, const LoopTypeEnum loopType);
 
 	void cvaEuropeanTrueValueTest(const double gearing,
@@ -67,9 +67,13 @@ namespace cva {
 		const double payoffShift,
 		const double maturity, const std::size_t gridNum,
 		const std::size_t seedLoop,
-		std::size_t  pathNum, std::size_t regNum,
+		std::size_t  pathNum, std::size_t regNum, const std::size_t numOfBasis,
 		const std::size_t pathLoop, const LoopTypeEnum loopType);
 
-
+	void cvaEuropeanRegressionModifiedExposureTest(const double gearing,
+		const double strike, const double shiftAmount,
+		const std::size_t seedLoop,
+		std::size_t  pathNum, std::size_t regNum, const std::size_t numOfBasis,
+		const std::size_t pathLoop, const LoopTypeEnum loopType);
 }
 #endif
