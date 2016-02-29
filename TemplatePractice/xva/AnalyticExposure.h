@@ -8,16 +8,11 @@
 #include "LsmFunction.h"
 #include <boost/bind.hpp>
 #include "PathMaker.h"
+#include "analytic_exposure_traits.h"
 
 namespace cva {
 	namespace ublas = boost::numeric::ublas;
 
-	template<typename P>
-	struct AnalyticExposureTraits {
-		typedef P payoff_type;
-		typedef ublas::vector<boost::function<Dual<double>(
-			const Dual<double>&)> > result_type;
-	};
 
 	//Calculate Cva By Analytic Exposure
 	template <typename T>
@@ -34,27 +29,10 @@ namespace cva {
 			x0, mu, sigma, dt, gridNum, pathNum, shockType, seed);
 
 		ublas::vector<boost::function<Dual<double>(
-			const Dual<double>&)> > exposureFunctions;
-		switch (productType) {
-		case fwdEnum:
-			exposureFunctions = makeAnalyticForwardExposures(
-				mu, sigma, pathDual.gridNum(), maturity,
-				payoff().gearing(), payoff().strike());
-			break;
-
-		case eurEnum:
-			exposureFunctions = makeAnalyticEuropeanExposures(
-				mu, sigma, pathDual.gridNum(), maturity,
-				payoff().gearing(), payoff().strike(), payoff().shiftAmount());
-			break;
-
-		case mountainEnum:
-			exposureFunctions = makeAnalyticMountainExposures(
-				mu, sigma, pathDual.gridNum(), maturity,
-				payoff().gearing(), payoff().strikes(), payoff().shiftAmount());
-			break;
-		}
-
+			const Dual<double>&)> > exposureFunctions
+			= analytic_exposure_traits<PayOff<T>>().apply(
+			mu, sigma, pathDual.gridNum(), maturity, payoff);
+		
 		Dual<double> cvaValue = useImplicitMethod
 			? calcCvaUsingImplicitExposure(
 				exposureFunctions, pathDual, payoff, dt)
@@ -151,5 +129,4 @@ namespace cva {
 		}
 		return rrFunctions;
 	}
-
 }//namespace cva

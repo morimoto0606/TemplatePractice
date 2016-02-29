@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\CRTP">
+      <UniqueIdentifier>{37813c48-33d7-4c8a-85d7-4b0df2ffd8c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Traits">
+      <UniqueIdentifier>{f769dcd5-ee6f-4ad4-874e-fe27f9673de9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Technique">
+      <UniqueIdentifier>{c5318078-f0ea-4f90-8d6f-870d22e55812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\xva">
+      <UniqueIdentifier>{f4798dd7-1513-4807-b57c-170c2a004d77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\xva\test">
+      <UniqueIdentifier>{d74ffb01-b042-4878-b2b7-96ec4410ea2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\xva\main">
+      <UniqueIdentifier>{eb5af189-7405-43a3-9b1d-0b3cbe7e71ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\xva\SourceFile">
+      <UniqueIdentifier>{0da92c87-d088-47dc-ba0a-f0dc8dbe276c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TraitTest.cpp">
+      <Filter>ソース ファイル\Traits</Filter>
+    </ClCompile>
+    <ClCompile Include="mainTrait.cpp">
+      <Filter>ソース ファイル\Traits</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\mainXva.cpp">
+      <Filter>ソース ファイル\xva\main</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\DualTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\LsmFunctionTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\OptionByLsmTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\OptionTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\PathTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\PayOffTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\RegressionTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\CvaByAnalyticExposureTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\CvaByRegressionExposureTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\CvaByAnalyticTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+    <ClCompile Include="xva\CvaByRegressionModifiedExposureTest.cpp">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Virtual.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TraitAndTagDispacher.h">
+      <Filter>ソース ファイル\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="TraitTest2.h">
+      <Filter>ソース ファイル\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="CRTP.h">
+      <Filter>ソース ファイル\CRTP</Filter>
+    </ClInclude>
+    <ClInclude Include="BartonNackmanTrick.h">
+      <Filter>ソース ファイル\CRTP</Filter>
+    </ClInclude>
+    <ClInclude Include="List2-1.h">
+      <Filter>ソース ファイル\Technique</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\AnalyticOptionFunctions.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\Dual.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\function_traits.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\Functions.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\LsmFunction.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\Path.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\PayOff.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\Regression.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\CvaCalculator.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\PathMaker.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\Test.h">
+      <Filter>ソース ファイル\xva\test</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\AnalyticExposure.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\RegressionExposure.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\CvaCalculatorByAnalytic.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+    <ClInclude Include="xva\analytic_exposure_traits.h">
+      <Filter>ソース ファイル\xva\SourceFile</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
